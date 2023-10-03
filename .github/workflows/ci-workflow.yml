@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: anchan828
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install npm packages
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test monorepo packages
+        run: npm test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
