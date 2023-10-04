@@ -1,0 +1,31 @@
+name: Patch Release
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"
+      branches:
+        - master
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+      - name: Checkout master
+        run: git checkout main
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install npm packages
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Publish monorepo packages
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          npx lerna publish --yes patch
