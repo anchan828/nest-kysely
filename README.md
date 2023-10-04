@@ -1,15 +1,14 @@
 # @anchan828/nest-kysely
 
 ![npm](https://img.shields.io/npm/v/@anchan828/nest-kysely.svg)
+![NPM](https://img.shields.io/npm/l/@anchan828/nest-kysely.svg)
 
-This is a [Nest](https://github.com/nestjs/nest) implementation of the redlock algorithm for distributed redis locks.
-
-This package uses [node-redlock](https://github.com/mike-marcacci/node-redlock).
+Module for using [kysely](https://www.npmjs.com/package/kysely) with nestjs.
 
 ## Installation
 
 ```bash
-$ npm i --save @anchan828/nest-kysely ioredis
+$ npm i --save @anchan828/nest-kysely kysely
 ```
 
 ## Quick Start
@@ -17,138 +16,119 @@ $ npm i --save @anchan828/nest-kysely ioredis
 ### 1. Import module
 
 ```ts
-import { RedlockModule } from "@anchan828/nest-kysely";
-import Redis from "ioredis";
+import { KyselyModule } from "@anchan828/nest-kysely";
+import * as SQLite from "better-sqlite3";
 
 @Module({
   imports: [
-    RedlockModule.register({
-      // See https://github.com/mike-marcacci/node-redlock#configuration
-      clients: [new Redis({ host: "localhost" })],
-      settings: {
-        driftFactor: 0.01,
-        retryCount: 10,
-        retryDelay: 200,
-        retryJitter: 200,
-        automaticExtensionThreshold: 500,
-      },
-      // Default duratiuon to use with Redlock decorator
-      duration: 1000,
+    KyselyModule.register({
+      dialect: new SQLite(":memory:"),
     }),
   ],
 })
 export class AppModule {}
 ```
 
-### 2. Add `Redlock` decorator
+### 2. Inject KyselyService
 
 ```ts
-import { Redlock } from "@anchan828/nest-kysely";
-
+import { KyselyService } from "@anchan828/nest-kysely";
+import { Database } from "./database.type";
 @Injectable()
 export class ExampleService {
-  @Redlock("lock-key")
-  public async addComment(projectId: number, comment: string): Promise<void> {}
-}
-```
+  constructor(readonly kysely: KyselyService<Database>) {}
 
-This is complete. redlock is working correctly!
-See [node-redlock](https://github.com/mike-marcacci/node-redlock) for more information on redlock.
-
-## Define complex resources (lock keys)
-
-Using constants causes the same lock key to be used for all calls. Let's reduce the scope a bit more.
-
-In this example, only certain projects are now locked.
-
-```ts
-import { Redlock } from "@anchan828/nest-kysely";
-
-@Injectable()
-export class ExampleService {
-  // The arguments define the class object to which the decorator is being added and the method arguments in order.
-  @Redlock<ExampleService["addComment"]>(
-    (target: ExampleService, projectId: number, comment: string) => `projects/${projectId}/comments`,
-  )
-  public async addComment(projectId: number, comment: string): Promise<void> {}
-}
-```
-
-Of course, you can lock multiple keys.
-
-```ts
-@Injectable()
-export class ExampleService {
-  @Redlock<ExampleService["updateComments"]>(
-    (target: ExampleService, projectId: number, args: Array<{ commentId: number; comment: string }>) =>
-      args.map((arg) => `projects/${projectId}/comments/${arg.commentId}`),
-  )
-  public async updateComments(projectId: number, args: Array<{ commentId: number; comment: string }>): Promise<void> {}
-}
-```
-
-## Using Redlock service
-
-If you want to use node-redlock as is, use RedlockService.
-
-```ts
-import { RedlockService } from "@anchan828/nest-kysely";
-
-@Injectable()
-export class ExampleService {
-  constructor(private readonly redlock: RedlockService) {}
-
-  public async addComment(projectId: number, comment: string): Promise<void> {
-    await this.redlock.using([`projects/${projectId}/comments`], 5000, (signal) => {
-      // Do something...
-
-      if (signal.aborted) {
-        throw signal.error;
-      }
-    });
+  public async test(): Promise<void> {
+    await this.kysely.db.selectFrom("person").where("id", "=", id).selectAll().executeTakeFirst();
   }
 }
 ```
 
-## Using fake RedlockService
+## Migration
 
-If you do not want to use Redis in your Unit tests, define the fake class as RedlockService.
-
-```ts
-const app = await Test.createTestingModule({
-  providers: [TestService, { provide: RedlockService, useClass: FakeRedlockService }],
-}).compile();
-```
-
-## Troubleshooting
-
-### Nest can't resolve dependencies of the XXX. Please make sure that the "@redlockService" property is available in the current context.
-
-This is the error output when using the Redlock decorator without importing the RedlockModule.
+If you want to do migration at module initialization time like TypeORM, use the migrations option.
+This package provides KyselyMigrationProvider. This provider can perform migration by passing the Migration class. Of course, you can also use FileMigrationProvider.
 
 ```ts
-import { RedlockModule } from "@anchan828/nest-kysely";
-import Redis from "ioredis";
+import { Kysely, Migration } from "kysely";
+import { KyselyMigrationProvider } from "@anchan828/nest-kysely";
+
+class CreateUserTable implements Migration {
+  public async up(db: Kysely<any>): Promise<void> {
+    await db.schema
+      .createTable("user")
+      .addColumn("id", "integer", (cb) => cb.primaryKey().autoIncrement().notNull())
+      .addColumn("name", "varchar(255)", (cb) => cb.notNull())
+      .execute();
+  }
+}
 
 @Module({
   imports: [
-    RedlockModule.register({
-      clients: [new Redis({ host: "localhost" })],
+    KyselyModule.register({
+      dialect: new SQLite(":memory:"),
+      migrations: {
+        migrationsRun: true,
+        migratorProps: {
+          provider: new KyselyMigrationProvider([CreateUserTable]),
+        },
+      },
     }),
   ],
 })
 export class AppModule {}
 ```
 
-#### What should I do with Unit tests, I don't want to use Redis.
+## Transaction
 
-Use `FakeRedlockService` class. Register FakeRedlockService with the provider as RedlockService.
+This KyselyTransactional decorator handles and propagates transactions between methods of different providers.
 
 ```ts
-const app = await Test.createTestingModule({
-  providers: [TestService, { provide: RedlockService, useClass: FakeRedlockService }],
-}).compile();
+@Injectable()
+class ChildService {
+  constructor(private readonly kysely: KyselyService<Database>) {}
+
+  @KyselyTransactional()
+  public async ok(): Promise<void> {
+    await this.kysely.db.insertInto("user").values({ name: "ChildService" }).execute();
+  }
+}
+
+@Injectable()
+class ParentService {
+  constructor(
+    private readonly child: ChildService,
+    private readonly kysely: KyselyService<Database>,
+  ) {}
+
+  @KyselyTransactional()
+  public async ok(): Promise<void> {
+    await this.kysely.db.insertInto("user").values({ name: "ParentService" }).execute();
+    await this.child.ok();
+  }
+}
 ```
+
+## Use raw Kysely object
+
+You can inject Kysely. **However, transactions using KyselyTransactional will not work.**
+
+```ts
+@Injectable()
+class Service {
+  constructor(private readonly db: Kysely<Database>) {}
+
+  public async ok(): Promise<void> {
+    await this.db.insertInto("user").values({ name: "Service" }).execute();
+  }
+}
+```
+
+## Troubleshooting
+
+### Nest can't resolve dependencies of the XXX. Please make sure that the "Symbol(KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL)" property is available in the current context.
+
+This is the error output when using the KyselyTransactional decorator without importing the KyselyModule.
 
 ## License
 
