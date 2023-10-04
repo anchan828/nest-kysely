@@ -11,7 +11,7 @@ export function KyselyTransactional(options: TransactionalOptions = {}): MethodD
     kyselyInjection(target, KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL);
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]): Promise<any> {
+    descriptor.value = function (...args: any[]): any {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const descriptorThis = this;
       const defaultkysely = (this as any)[KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL] as Kysely<any>;
