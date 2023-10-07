@@ -1,4 +1,4 @@
-import type { IsolationLevel, KyselyConfig, MigratorProps } from "kysely";
+import type { IsolationLevel, KyselyConfig, Migration, MigratorProps } from "kysely";
 
 export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
@@ -10,6 +10,10 @@ export interface KyselyModuleOptions extends KyselyConfig {
   migrations?: KyselyMigrationOptions;
 }
 
-export interface TransactionalOptions {
+export interface KyselyTransactionalOptions {
   isolationLevel?: IsolationLevel;
+}
+
+export interface MigrationClass extends Function {
+  new (...args: any[]): Migration;
 }
