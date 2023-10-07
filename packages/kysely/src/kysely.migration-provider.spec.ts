@@ -15,8 +15,11 @@ describe("KyselyMigrationProvider", () => {
 
       const provider = new KyselyMigrationProvider([Migration1, Migration1]);
 
-      await expect(provider.getMigrations()).rejects.toThrow("Duplicate migration name: Migration1");
+      await expect(provider.getMigrations()).rejects.toThrow(
+        "Migration name 'Migration1' is duplicated. Are you setting the same migration class?",
+      );
     });
+
     it("should get migrations", async () => {
       class Migration1 implements Migration {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,8 +33,8 @@ describe("KyselyMigrationProvider", () => {
 
       const provider = new KyselyMigrationProvider([Migration1, Migration2]);
       await expect(provider.getMigrations()).resolves.toEqual({
-        Migration1: expect.anything(),
-        Migration2: expect.anything(),
+        "0-Migration1": expect.anything(),
+        "1-Migration2": expect.anything(),
       });
     });
   });

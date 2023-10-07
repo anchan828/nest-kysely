@@ -2,9 +2,9 @@ import { Inject } from "@nestjs/common";
 import { Kysely } from "kysely";
 import { KYSELY_TRANSACTION_ASYNC_LOCAL_STORAGE } from "./kysely.async-storage";
 import { KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL } from "./kysely.constant";
-import { TransactionalOptions } from "./kysely.interface";
+import { KyselyTransactionalOptions } from "./kysely.interface";
 
-export function KyselyTransactional(options: TransactionalOptions = {}): MethodDecorator {
+export function KyselyTransactional(options: KyselyTransactionalOptions = {}): MethodDecorator {
   const kyselyInjection = Inject(Kysely);
 
   return (target: Object, propertyName: string | symbol, descriptor: PropertyDescriptor) => {
@@ -15,9 +15,10 @@ export function KyselyTransactional(options: TransactionalOptions = {}): MethodD
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const descriptorThis = this;
       const defaultkysely = (this as any)[KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL] as Kysely<any>;
+
       const transaction = KYSELY_TRANSACTION_ASYNC_LOCAL_STORAGE.getStore();
 
-      if (transaction) {
+      if (!defaultkysely || transaction) {
         return originalMethod.apply(descriptorThis, args);
       }
 
