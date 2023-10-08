@@ -112,7 +112,7 @@ class ParentService {
 
 ### Use KyselyService
 
-Using kysely.startTransaction allows you to propagate transactions.
+Using KyselyService.startTransaction allows you to propagate transactions.
 
 ```ts
 @Injectable()
