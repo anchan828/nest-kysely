@@ -1,11 +1,11 @@
 import { Inject } from "@nestjs/common";
 import { Kysely } from "kysely";
 import { KYSELY_TRANSACTION_ASYNC_LOCAL_STORAGE } from "./kysely.async-storage";
-import { KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL } from "./kysely.constant";
+import { KYSELY, KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL } from "./kysely.constant";
 import { KyselyTransactionalOptions } from "./kysely.interface";
 
 export function KyselyTransactional(options: KyselyTransactionalOptions = {}): MethodDecorator {
-  const kyselyInjection = Inject(Kysely);
+  const kyselyInjection = Inject(KYSELY);
 
   return (target: Object, propertyName: string | symbol, descriptor: PropertyDescriptor) => {
     kyselyInjection(target, KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL);
