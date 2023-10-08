@@ -3,6 +3,7 @@ import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import * as request from "supertest";
 import { AppModule } from "../app.module";
+import { clearDatabase } from "../test-utils/clear-database";
 import { UserDatabase, UserRoleDatabase } from "./user.type";
 
 describe("UserController", () => {
@@ -16,6 +17,7 @@ describe("UserController", () => {
   });
 
   afterEach(async () => {
+    await clearDatabase(app);
     await app.close();
   });
 

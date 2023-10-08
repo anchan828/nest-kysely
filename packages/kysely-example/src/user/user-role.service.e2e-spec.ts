@@ -1,6 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "../app.module";
+import { clearDatabase } from "../test-utils/clear-database";
 import { UserRoleService } from "./user-role.service";
 describe("UserRoleService", () => {
   let app: INestApplication;
@@ -15,6 +16,7 @@ describe("UserRoleService", () => {
   });
 
   afterEach(async () => {
+    await clearDatabase(app);
     await app.close();
   });
 

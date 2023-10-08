@@ -9,6 +9,6 @@ export class CreateUserRoleTable implements Migration {
       .addColumn("role", "varchar(255)", (cb) => cb.notNull())
       .execute();
 
-    Logger.debug("CreateUserRoleTable migration completed", "KyselyMigration");
+    Logger.debug("CreateUserRoleTable migration completed", "KyselyMigrator");
   }
 }
