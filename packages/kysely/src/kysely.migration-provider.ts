@@ -11,16 +11,16 @@ export class KyselyMigrationProvider implements MigrationProvider {
   async getMigrations(): Promise<Record<string, Migration>> {
     const uniqueNames = new Set<string>();
 
+    for (const migration of this.migrations) {
+      if (uniqueNames.has(migration.name)) {
+        throw new Error(`Migration name '${migration.name}' is duplicated. Are you setting the same migration class?`);
+      } else {
+        uniqueNames.add(migration.name);
+      }
+    }
+
     return this.migrations.reduce(
       (acc, migration, index) => {
-        if (uniqueNames.has(migration.name)) {
-          throw new Error(
-            `Migration name '${migration.name}' is duplicated. Are you setting the same migration class?`,
-          );
-        } else {
-          uniqueNames.add(migration.name);
-        }
-
         const migrationKey = `${index}-${migration.name}`;
         const obj = new migration();
         acc[migrationKey] = {

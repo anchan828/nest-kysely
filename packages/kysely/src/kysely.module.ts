@@ -1,5 +1,6 @@
 import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { Kysely, Migrator } from "kysely";
+import { KYSELY } from "./kysely.constant";
 import { KyselyModuleOptions } from "./kysely.interface";
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from "./kysely.module-definition";
 import { KyselyService } from "./kysely.service";
@@ -8,7 +9,7 @@ import { KyselyService } from "./kysely.service";
 @Module({
   providers: [
     {
-      provide: Kysely,
+      provide: KYSELY,
       useFactory: async (options: KyselyModuleOptions) => {
         return new Kysely(options);
       },
@@ -16,7 +17,7 @@ import { KyselyService } from "./kysely.service";
     },
     KyselyService,
   ],
-  exports: [Kysely, KyselyService],
+  exports: [KYSELY, KyselyService],
 })
 export class KyselyModule
   extends ConfigurableModuleClass
@@ -26,7 +27,7 @@ export class KyselyModule
 
   constructor(
     @Inject(MODULE_OPTIONS_TOKEN) private readonly options: KyselyModuleOptions,
-    readonly kysely: Kysely<any>,
+    @Inject(KYSELY) readonly kysely: Kysely<any>,
   ) {
     super();
   }

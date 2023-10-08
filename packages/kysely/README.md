@@ -83,12 +83,13 @@ export class AppModule {}
 
 This KyselyTransactional decorator handles and propagates transactions between methods of different providers.
 
+### Use @KyselyTransactional()
+
 ```ts
 @Injectable()
 class ChildService {
   constructor(private readonly kysely: KyselyService<Database>) {}
 
-  @KyselyTransactional()
   public async ok(): Promise<void> {
     await this.kysely.db.insertInto("user").values({ name: "ChildService" }).execute();
   }
@@ -109,6 +110,36 @@ class ParentService {
 }
 ```
 
+### Use KyselyService
+
+Using KyselyService.startTransaction allows you to propagate transactions.
+
+```ts
+@Injectable()
+class ChildService {
+  constructor(private readonly kysely: KyselyService<Database>) {}
+
+  public async ok(): Promise<void> {
+    await this.kysely.db.insertInto("user").values({ name: "ChildService" }).execute();
+  }
+}
+
+@Injectable()
+class ParentService {
+  constructor(
+    private readonly child: ChildService,
+    private readonly kysely: KyselyService<Database>,
+  ) {}
+
+  public async ok(): Promise<void> {
+    await this.kysely.startTransaction(() => {
+      await this.kysely.db.insertInto("user").values({ name: "ParentService" }).execute();
+      await this.child.ok();
+    });
+  }
+}
+```
+
 ## Use raw Kysely object
 
 You can inject Kysely. **However, transactions using KyselyTransactional will not work.**
@@ -116,7 +147,7 @@ You can inject Kysely. **However, transactions using KyselyTransactional will no
 ```ts
 @Injectable()
 class Service {
-  constructor(private readonly db: Kysely<Database>) {}
+  constructor(@Inject(KYSELY) private readonly db: Kysely<Database>) {}
 
   public async ok(): Promise<void> {
     await this.db.insertInto("user").values({ name: "Service" }).execute();

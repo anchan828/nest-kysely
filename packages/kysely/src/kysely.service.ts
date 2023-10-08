@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Kysely, Transaction } from "kysely";
 import { KYSELY_TRANSACTION_ASYNC_LOCAL_STORAGE } from "./kysely.async-storage";
+import { KYSELY } from "./kysely.constant";
 import { KyselyTransactionalOptions } from "./kysely.interface";
 @Injectable()
 export class KyselyService<DB = any> {
-  constructor(private readonly kysely: Kysely<DB>) {}
+  constructor(@Inject(KYSELY) private readonly kysely: Kysely<DB>) {}
 
   public get db(): Kysely<DB> | Transaction<DB> {
     const transaction = KYSELY_TRANSACTION_ASYNC_LOCAL_STORAGE.getStore();
