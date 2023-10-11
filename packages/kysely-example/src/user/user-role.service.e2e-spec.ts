@@ -3,16 +3,19 @@ import { Test } from "@nestjs/testing";
 import { AppModule } from "../app.module";
 import { clearDatabase } from "../test-utils/clear-database";
 import { UserRoleService } from "./user-role.service";
+import { UserService } from "./user.service";
 describe("UserRoleService", () => {
   let app: INestApplication;
-  let service: UserRoleService;
+  let userService: UserService;
+  let userRoleService: UserRoleService;
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
-    service = app.get(UserRoleService);
+    userService = app.get(UserService);
+    userRoleService = app.get(UserRoleService);
   });
 
   afterEach(async () => {
@@ -22,18 +25,21 @@ describe("UserRoleService", () => {
 
   describe("getById", () => {
     it("should throw exception(Not found)", async () => {
-      await expect(service.getByUserId("userId")).rejects.toThrow("User role not found");
+      const user = await userService.create("test");
+      await expect(userRoleService.getByUserId(user.id)).rejects.toThrow("User role not found");
     });
 
     it("should get user", async () => {
-      await service.create("userId", "user");
-      await expect(service.getByUserId("userId")).resolves.toEqual({ role: "user", userId: "userId" });
+      const user = await userService.create("test");
+      await userRoleService.create(user.id, "user");
+      await expect(userRoleService.getByUserId(user.id)).resolves.toEqual({ role: "user", userId: user.id });
     });
   });
 
   describe("create", () => {
     it("should create user", async () => {
-      await expect(service.create("userId", "user")).resolves.toBeUndefined();
+      const user = await userService.create("test");
+      await expect(userRoleService.create(user.id, "user")).resolves.toBeUndefined();
     });
   });
 });
