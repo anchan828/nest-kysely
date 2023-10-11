@@ -1,41 +1,34 @@
 import { KyselyService } from "@anchan828/nest-kysely";
-import * as SQLite from "better-sqlite3";
-import { DeepMockProxy } from "jest-mock-extended";
-import { DatabaseConnection, Kysely, SqliteDialect } from "kysely";
-import { createDriverMock } from "../test-utils/create-mock-driver";
+import { Kysely } from "kysely";
+import { MysqlTestDialect } from "../test-utils/mysql-test-driver";
 import { UserDatabase } from "../user/user.type";
 import { CommentRepository } from "./comment.repository";
 import { CommentDatabase } from "./comment.type";
 
 describe("CommentRepository", () => {
-  let connectionMock: DeepMockProxy<DatabaseConnection>;
+  let dialect: MysqlTestDialect;
   let repository: CommentRepository;
   beforeEach(() => {
-    const dialect = new SqliteDialect({
-      database: new SQLite(":memory:"),
-    });
-    const { connection } = createDriverMock(dialect);
-    connectionMock = connection;
-
+    dialect = new MysqlTestDialect();
     const db = new Kysely<CommentDatabase & UserDatabase>({ dialect });
     const service = new KyselyService<CommentDatabase & UserDatabase>(db);
     repository = new CommentRepository(service);
   });
   describe("create", () => {
     it("should call create", async () => {
-      connectionMock.executeQuery.mockResolvedValueOnce({
+      dialect.connection.executeQuery.mockResolvedValueOnce({
         rows: [],
         numAffectedRows: 1n,
       });
 
       await repository.create("comment", "userId");
 
-      expect(connectionMock.executeQuery.mock.calls).toEqual([
+      expect(dialect.connection.executeQuery.mock.calls).toEqual([
         [
           {
             parameters: [expect.any(String), "comment", "userId", expect.any(Date)],
             query: expect.anything(),
-            sql: 'insert into "comment" ("id", "comment", "createdById", "createdAt") values (?, ?, ?, ?)',
+            sql: "insert into `comment` (`id`, `comment`, `createdById`, `createdAt`) values (?, ?, ?, ?)",
           },
         ],
       ]);
@@ -52,7 +45,7 @@ describe("CommentRepository", () => {
         createdByName: "username",
       };
 
-      connectionMock.executeQuery.mockResolvedValueOnce({
+      dialect.connection.executeQuery.mockResolvedValueOnce({
         rows: [row],
       });
 
@@ -66,12 +59,12 @@ describe("CommentRepository", () => {
         },
       });
 
-      expect(connectionMock.executeQuery.mock.calls).toEqual([
+      expect(dialect.connection.executeQuery.mock.calls).toEqual([
         [
           {
             parameters: ["commentId"],
             query: expect.anything(),
-            sql: 'select "comment"."comment", "comment"."createdAt", "comment"."id", "comment"."createdById", "user"."name" as "createdByName" from "comment" inner join "user" on "user"."id" = "comment"."createdById" where "comment"."id" = ?',
+            sql: "select `comment`.`comment`, `comment`.`createdAt`, `comment`.`id`, `comment`.`createdById`, `user`.`name` as `createdByName` from `comment` inner join `user` on `user`.`id` = `comment`.`createdById` where `comment`.`id` = ?",
           },
         ],
       ]);
@@ -97,7 +90,7 @@ describe("CommentRepository", () => {
         },
       ];
 
-      connectionMock.executeQuery.mockResolvedValueOnce({
+      dialect.connection.executeQuery.mockResolvedValueOnce({
         rows,
       });
 
@@ -113,12 +106,12 @@ describe("CommentRepository", () => {
         })),
       );
 
-      expect(connectionMock.executeQuery.mock.calls).toEqual([
+      expect(dialect.connection.executeQuery.mock.calls).toEqual([
         [
           {
             parameters: [],
             query: expect.anything(),
-            sql: 'select "comment"."comment", "comment"."createdAt", "comment"."id", "comment"."createdById", "user"."name" as "createdByName" from "comment" inner join "user" on "user"."id" = "comment"."createdById"',
+            sql: "select `comment`.`comment`, `comment`.`createdAt`, `comment`.`id`, `comment`.`createdById`, `user`.`name` as `createdByName` from `comment` inner join `user` on `user`.`id` = `comment`.`createdById`",
           },
         ],
       ]);
@@ -127,19 +120,19 @@ describe("CommentRepository", () => {
 
   describe("delete", () => {
     it("should call delete", async () => {
-      connectionMock.executeQuery.mockResolvedValueOnce({
+      dialect.connection.executeQuery.mockResolvedValueOnce({
         rows: [],
         numAffectedRows: 1n,
       });
 
       await repository.delete("commentId");
 
-      expect(connectionMock.executeQuery.mock.calls).toEqual([
+      expect(dialect.connection.executeQuery.mock.calls).toEqual([
         [
           {
             parameters: ["commentId"],
             query: expect.anything(),
-            sql: 'delete from "comment" where "id" = ?',
+            sql: "delete from `comment` where `id` = ?",
           },
         ],
       ]);

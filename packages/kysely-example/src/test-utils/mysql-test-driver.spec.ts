@@ -1,18 +1,9 @@
-import { Generated, Kysely, MysqlDialect } from "kysely";
-import { createPool } from "mysql2";
-import { createDriverMock } from "./create-mock-driver";
+import { Generated, Kysely } from "kysely";
+import { MysqlTestDialect } from "./mysql-test-driver";
 
-describe("createMockDriver", () => {
+describe("MysqlTestDialect", () => {
   it("should create driver and connection", async () => {
-    const dialect = new MysqlDialect({
-      pool: createPool({
-        database: "test",
-        user: "root",
-        password: "root",
-      }),
-    });
-
-    const { connection } = createDriverMock(dialect);
+    const dialect = new MysqlTestDialect();
 
     const kysely = new Kysely<{
       user: {
@@ -23,14 +14,14 @@ describe("createMockDriver", () => {
       dialect,
     });
 
-    connection.executeQuery.mockResolvedValueOnce({ rows: [{ id: 1, name: "name" }] });
+    dialect.connection.executeQuery.mockResolvedValueOnce({ rows: [{ id: 1, name: "name" }] });
 
     await expect(kysely.selectFrom("user").where("id", "=", 1).selectAll().execute()).resolves.toEqual([
       { id: 1, name: "name" },
     ]);
 
-    expect(connection.executeQuery).toHaveBeenCalledTimes(1);
-    expect(connection.executeQuery.mock.calls).toEqual([
+    expect(dialect.connection.executeQuery).toHaveBeenCalledTimes(1);
+    expect(dialect.connection.executeQuery.mock.calls).toEqual([
       [
         {
           parameters: [1],
@@ -92,15 +83,7 @@ describe("createMockDriver", () => {
   });
 
   it("transaction", async () => {
-    const dialect = new MysqlDialect({
-      pool: createPool({
-        database: "test",
-        user: "root",
-        password: "root",
-      }),
-    });
-
-    const { connection } = createDriverMock(dialect);
+    const dialect = new MysqlTestDialect();
 
     const kysely = new Kysely<{
       user: {
@@ -111,7 +94,7 @@ describe("createMockDriver", () => {
       dialect,
     });
 
-    connection.executeQuery
+    dialect.connection.executeQuery
       .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [{ id: 1, name: "name" }] })
       .mockResolvedValueOnce({ rows: [] });
@@ -122,8 +105,8 @@ describe("createMockDriver", () => {
       }),
     ).resolves.toEqual({ id: 1, name: "name" });
 
-    expect(connection.executeQuery).toHaveBeenCalledTimes(3);
-    expect(connection.executeQuery.mock.calls).toEqual([
+    expect(dialect.connection.executeQuery).toHaveBeenCalledTimes(3);
+    expect(dialect.connection.executeQuery.mock.calls).toEqual([
       [
         {
           parameters: [],
