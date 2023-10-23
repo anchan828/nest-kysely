@@ -38,7 +38,7 @@
     "kysely": "0.26.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "10.1.18",
+    "@nestjs/cli": "10.2.0",
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.7",
     "@types/better-sqlite3": "7.6.6",
