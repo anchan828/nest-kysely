@@ -25,9 +25,9 @@
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@nestjs/common": "10.2.7",
-    "@nestjs/core": "10.2.7",
-    "@nestjs/testing": "10.2.7",
+    "@nestjs/common": "10.2.8",
+    "@nestjs/core": "10.2.8",
+    "@nestjs/testing": "10.2.8",
     "@types/better-sqlite3": "7.6.6",
     "@types/pg": "8.10.7",
     "better-sqlite3": "9.0.0",
