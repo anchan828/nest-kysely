@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-kysely",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "NestJS module for Kysely",
   "homepage": "https://github.com/anchan828/nest-kysely#readme",
   "bugs": {
