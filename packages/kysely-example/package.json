@@ -35,7 +35,7 @@
     "@nestjs/core": "10.3.3",
     "@nestjs/platform-express": "10.3.3",
     "express": "4.18.3",
-    "kysely": "0.27.2"
+    "kysely": "0.27.3"
   },
   "devDependencies": {
     "@nestjs/cli": "10.3.2",
@@ -46,7 +46,7 @@
     "@types/supertest": "6.0.2",
     "better-sqlite3": "9.4.3",
     "jest-mock-extended": "3.0.5",
-    "kysely": "0.27.2",
+    "kysely": "0.27.3",
     "mysql2": "3.9.2",
     "pg": "8.11.3",
     "supertest": "6.3.4"
