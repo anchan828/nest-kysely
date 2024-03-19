@@ -160,7 +160,7 @@ class Service {
 This package provides a very simple CLI for generating migration files.
 
 ```bash
-$ npm exec -- nest-kysely migration:create src/migrations/CreateTable
+$ npm exec -- nest-kysely migration:create src/migrations CreateTable
 Created migration file: src/migrations/1710847324757-CreateTable.ts
 ```
 
