@@ -42,9 +42,9 @@ const migrationFileContent = [
   `import { Kysely, Migration } from "kysely";`,
   ``,
   `export class ${migrationName}${timestamp} implements Migration {`,
-  `  public async up(db: Kysely<any>): Promise<void> {`,
+  `  public async up(db: Kysely<unknown>): Promise<void> {`,
   `  }`,
-  `  public async down(db: Kysely<any>): Promise<void> {`,
+  `  public async down(db: Kysely<unknown>): Promise<void> {`,
   `  }`,
   `}`,
 ];
