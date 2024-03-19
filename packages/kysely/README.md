@@ -155,6 +155,26 @@ class Service {
 }
 ```
 
+## CLI
+
+This package provides a very simple CLI for generating migration files.
+
+```bash
+$ npm exec -- nest-kysely migration:create src/migrations/CreateTable
+Created migration file: src/migrations/1710847324757-CreateTable.ts
+```
+
+A timestamp is automatically added to the file name and class name.
+
+```ts
+import { Kysely, Migration } from "kysely";
+
+export class CreateTable1710847324757 implements Migration {
+  public async up(db: Kysely<any>): Promise<void> {}
+  public async down(db: Kysely<any>): Promise<void> {}
+}
+```
+
 ## Troubleshooting
 
 ### Nest can't resolve dependencies of the XXX. Please make sure that the "Symbol(KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL)" property is available in the current context.
