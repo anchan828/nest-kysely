@@ -34,7 +34,7 @@
     "@nestjs/common": "10.3.4",
     "@nestjs/core": "10.3.4",
     "@nestjs/platform-express": "10.3.4",
-    "express": "4.18.3",
+    "express": "4.19.0",
     "kysely": "0.27.3"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "@nestjs/schematics": "10.1.1",
     "@nestjs/testing": "10.3.4",
     "@types/better-sqlite3": "7.6.9",
-    "@types/pg": "8.11.3",
+    "@types/pg": "8.11.4",
     "@types/supertest": "6.0.2",
     "better-sqlite3": "9.4.3",
     "jest-mock-extended": "3.0.5",
