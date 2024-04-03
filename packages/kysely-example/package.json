@@ -44,11 +44,11 @@
     "@types/better-sqlite3": "7.6.9",
     "@types/pg": "8.11.4",
     "@types/supertest": "6.0.2",
-    "better-sqlite3": "9.4.3",
+    "better-sqlite3": "9.4.5",
     "jest-mock-extended": "3.0.5",
     "kysely": "0.27.3",
     "mysql2": "3.9.3",
-    "pg": "8.11.4",
+    "pg": "8.11.5",
     "supertest": "6.3.4"
   },
   "peerDependencies": {
