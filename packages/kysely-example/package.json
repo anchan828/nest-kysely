@@ -55,7 +55,7 @@
     "kysely": "^0.x"
   },
   "volta": {
-    "node": "20.12.0"
+    "node": "20.12.1"
   },
   "publishConfig": {
     "access": "public"
