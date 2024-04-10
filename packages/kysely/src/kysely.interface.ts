@@ -17,3 +17,10 @@ export interface KyselyTransactionalOptions {
 export interface MigrationClass extends Function {
   new (...args: any[]): Migration;
 }
+
+export interface KyselyMigrationProviderOptions {
+  /**
+   * Generates a prefix for the migration key.
+   */
+  prefixFn?: (index: number) => string;
+}
