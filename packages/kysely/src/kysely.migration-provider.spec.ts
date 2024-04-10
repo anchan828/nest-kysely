@@ -49,7 +49,7 @@ describe("KyselyMigrationProvider", () => {
     });
 
     it("should get migrations (custom prefix)", async () => {
-      const migrationClasses = Array(11)
+      const migrationClasses = Array(21)
         .fill(0)
         .map((_, i) => {
           const MigrationClass = class implements Migration {
@@ -68,6 +68,7 @@ describe("KyselyMigrationProvider", () => {
           return `9${index}`.padEnd(8, "0");
         },
       });
+
       await expect(provider.getMigrations()).resolves.toStrictEqual({
         "0-Migration0": expect.anything(),
         "1-Migration1": expect.anything(),
@@ -80,6 +81,16 @@ describe("KyselyMigrationProvider", () => {
         "8-Migration8": expect.anything(),
         "9-Migration9": expect.anything(),
         "91000000-Migration10": expect.anything(),
+        "91100000-Migration11": expect.anything(),
+        "91200000-Migration12": expect.anything(),
+        "91300000-Migration13": expect.anything(),
+        "91400000-Migration14": expect.anything(),
+        "91500000-Migration15": expect.anything(),
+        "91600000-Migration16": expect.anything(),
+        "91700000-Migration17": expect.anything(),
+        "91800000-Migration18": expect.anything(),
+        "91900000-Migration19": expect.anything(),
+        "92000000-Migration20": expect.anything(),
       });
     });
   });
