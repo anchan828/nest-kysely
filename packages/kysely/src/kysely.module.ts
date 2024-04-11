@@ -1,4 +1,4 @@
-import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleInit } from "@nestjs/common";
 import { Kysely, Migrator } from "kysely";
 import { KYSELY } from "./kysely.constant";
 import { KyselyModuleOptions } from "./kysely.interface";
@@ -19,10 +19,7 @@ import { KyselyService } from "./kysely.service";
   ],
   exports: [KYSELY, KyselyService],
 })
-export class KyselyModule
-  extends ConfigurableModuleClass
-  implements OnModuleInit, OnModuleDestroy, OnApplicationShutdown
-{
+export class KyselyModule extends ConfigurableModuleClass implements OnModuleInit, OnApplicationShutdown {
   #logger = new Logger("KyselyModule");
 
   constructor(
@@ -45,10 +42,6 @@ export class KyselyModule
         }
       }
     }
-  }
-
-  async onModuleDestroy(): Promise<void> {
-    await this.kysely.destroy();
   }
 
   async onApplicationShutdown(): Promise<void> {
