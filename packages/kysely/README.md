@@ -155,6 +155,29 @@ class Service {
 }
 ```
 
+## Plugin
+
+### RemoveNullPropertyPlugin
+
+This plugin removes properties with null values from the result.
+
+```json
+{
+  "id": 1,
+  "name": "John",
+  "nullableColumn": null
+}
+```
+
+will be transformed to:
+
+```json
+{
+  "id": 1,
+  "name": "John"
+}
+```
+
 ## CLI
 
 This package provides a very simple CLI for generating migration files.
