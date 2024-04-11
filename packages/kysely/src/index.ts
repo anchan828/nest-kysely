@@ -3,3 +3,4 @@ export { KyselyMigrationOptions, KyselyModuleOptions, KyselyTransactionalOptions
 export { KyselyMigrationProvider } from "./kysely.migration-provider";
 export { KyselyModule } from "./kysely.module";
 export { KyselyService } from "./kysely.service";
+export { RemoveNullPropertyPlugin } from "./remove-null-property.plugin";
