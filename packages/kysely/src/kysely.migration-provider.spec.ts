@@ -1,9 +1,9 @@
 import { Kysely, Migration } from "kysely";
-import { KyselyMigrationProvider } from "./kysely.migration-provider";
+import { KyselyMigrationClassProvider } from "./kysely.migration-provider";
 
 describe("KyselyMigrationProvider", () => {
   it("should be defined", () => {
-    expect(new KyselyMigrationProvider([])).toBeDefined();
+    expect(new KyselyMigrationClassProvider([])).toBeDefined();
   });
 
   describe("getMigrations", () => {
@@ -13,7 +13,7 @@ describe("KyselyMigrationProvider", () => {
         public async up(db: Kysely<any>): Promise<void> {}
       }
 
-      const provider = new KyselyMigrationProvider([Migration1, Migration1]);
+      const provider = new KyselyMigrationClassProvider([Migration1, Migration1]);
 
       await expect(provider.getMigrations()).rejects.toThrow(
         "Migration name 'Migration1' is duplicated. Are you setting the same migration class?",
@@ -32,7 +32,7 @@ describe("KyselyMigrationProvider", () => {
           return MigrationClass;
         });
 
-      const provider = new KyselyMigrationProvider(migrationClasses);
+      const provider = new KyselyMigrationClassProvider(migrationClasses);
       await expect(provider.getMigrations()).resolves.toStrictEqual({
         "00000000-Migration0": expect.anything(),
         "00000001-Migration1": expect.anything(),
@@ -60,7 +60,7 @@ describe("KyselyMigrationProvider", () => {
           return MigrationClass;
         });
 
-      const provider = new KyselyMigrationProvider(migrationClasses, {
+      const provider = new KyselyMigrationClassProvider(migrationClasses, {
         prefixFn: (index) => {
           if (index <= 9) {
             return index.toString();

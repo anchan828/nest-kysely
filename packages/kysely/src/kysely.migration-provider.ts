@@ -1,14 +1,14 @@
 import { Migration, MigrationProvider } from "kysely";
-import { KyselyMigrationProviderOptions, MigrationClass } from "./kysely.interface";
+import { KyselyMigrationClassProviderOptions, MigrationClass } from "./kysely.interface";
 
 /**
  * Provider for generating migrations from classes.
  * Migrations are executed in the order in which the classes are passed in the constructor.
  */
-export class KyselyMigrationProvider implements MigrationProvider {
+export class KyselyMigrationClassProvider implements MigrationProvider {
   constructor(
     private readonly migrations: MigrationClass[],
-    private readonly options?: KyselyMigrationProviderOptions,
+    private readonly options?: KyselyMigrationClassProviderOptions,
   ) {}
 
   async getMigrations(): Promise<Record<string, Migration>> {
