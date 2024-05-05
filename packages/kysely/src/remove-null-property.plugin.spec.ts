@@ -3,7 +3,7 @@ import * as SQLite from "better-sqlite3";
 import { Generated, Kysely, Migration, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
 import { Pool } from "pg";
-import { KyselyMigrationProvider } from "./kysely.migration-provider";
+import { KyselyMigrationClassProvider } from "./kysely.migration-provider";
 import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
 import { RemoveNullPropertyPlugin } from "./remove-null-property.plugin";
@@ -79,7 +79,7 @@ describe.each([
           migrations: {
             migrationsRun: true,
             migratorProps: {
-              provider: new KyselyMigrationProvider([Migration1]),
+              provider: new KyselyMigrationClassProvider([Migration1]),
             },
           },
           plugins: [new RemoveNullPropertyPlugin()],

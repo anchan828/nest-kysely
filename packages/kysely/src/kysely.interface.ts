@@ -18,7 +18,7 @@ export interface MigrationClass extends Function {
   new (...args: any[]): Migration;
 }
 
-export interface KyselyMigrationProviderOptions {
+export interface KyselyMigrationClassProviderOptions {
   /**
    * Generates a prefix for the migration key.
    */

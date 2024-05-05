@@ -1,4 +1,4 @@
-import { KyselyMigrationProvider, KyselyModule } from "@anchan828/nest-kysely";
+import { KyselyMigrationClassProvider, KyselyModule } from "@anchan828/nest-kysely";
 import { Module } from "@nestjs/common";
 import { MysqlDialect } from "kysely";
 import { createPool } from "mysql2";
@@ -23,7 +23,7 @@ import { UserModule } from "./user/user.module";
         migrationsRun: true,
         throwMigrationError: true,
         migratorProps: {
-          provider: new KyselyMigrationProvider(migrations),
+          provider: new KyselyMigrationClassProvider(migrations),
         },
       },
     }),
