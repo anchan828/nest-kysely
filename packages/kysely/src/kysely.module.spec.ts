@@ -95,10 +95,6 @@ describe.each([
       await app.init();
       const db = app.get(KyselyService).db;
 
-      console.dir(await db.introspection.getTables({ withInternalKyselyTables: true }).catch((e) => e), {
-        depth: null,
-      });
-
       await expect(db.introspection.getTables({ withInternalKyselyTables: true })).resolves.toMatchObject([
         expect.objectContaining({ name: "kysely_migration" }),
         expect.objectContaining({ name: "kysely_migration_lock" }),
