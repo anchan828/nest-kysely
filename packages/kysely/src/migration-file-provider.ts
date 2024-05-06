@@ -27,7 +27,7 @@ export class KyselyMigrationFileProvider extends FileMigrationProvider {
 
       migrations[migrationKey] = {
         up: async (db) => {
-          await sql`${migration}`.execute(db);
+          await sql.raw(migration).execute(db);
         },
       };
     }
