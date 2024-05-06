@@ -1,5 +1,5 @@
 import { Kysely, Migration } from "kysely";
-import { KyselyMigrationClassProvider } from "./kysely.migration-provider";
+import { KyselyMigrationClassProvider } from "./migration-class-provider";
 
 describe("KyselyMigrationProvider", () => {
   it("should be defined", () => {
