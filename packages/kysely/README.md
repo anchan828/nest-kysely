@@ -22,7 +22,9 @@ import * as SQLite from "better-sqlite3";
 @Module({
   imports: [
     KyselyModule.register({
-      dialect: new SQLite(":memory:"),
+      dialect: new SqliteDialect({
+        database: new SQLite(":memory:"),
+      }),
     }),
   ],
 })
@@ -47,11 +49,15 @@ export class ExampleService {
 ## Migration
 
 If you want to do migration at module initialization time like TypeORM, use the migrations option.
-This package provides KyselyMigrationProvider. This provider can perform migration by passing the Migration class. Of course, you can also use FileMigrationProvider.
+This package provides some migration providers.
+
+### KyselyMigrationClassProvider
+
+This provider can perform migration by passing the Migration class.
 
 ```ts
 import { Kysely, Migration } from "kysely";
-import { KyselyMigrationProvider } from "@anchan828/nest-kysely";
+import { KyselyMigrationClassProvider } from "@anchan828/nest-kysely";
 
 class CreateUserTable implements Migration {
   public async up(db: Kysely<any>): Promise<void> {
@@ -66,11 +72,88 @@ class CreateUserTable implements Migration {
 @Module({
   imports: [
     KyselyModule.register({
-      dialect: new SQLite(":memory:"),
+      dialect: new SqliteDialect({
+        database: new SQLite(":memory:"),
+      }),
       migrations: {
         migrationsRun: true,
         migratorProps: {
-          provider: new KyselyMigrationProvider([CreateUserTable]),
+          provider: new KyselyMigrationClassProvider([CreateUserTable]),
+        },
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### KyselyMigrationFileProvider
+
+This provider can perform migration by passing the migrations directory path. This provider wraps the FileMigrationProvider provided by kysely and supports SQL files.
+
+```shell
+migrations
+├── 1715003546247-CreateUserTable.ts
+├── 1715003558664-CreateUserInsertTrigger.sql
+├── 1715003568628-UpdateUserTable.sql
+└── 1715003583015-CreateUserTableIndex.js
+```
+
+```ts
+@Module({
+  imports: [
+    KyselyModule.register({
+      dialect: new PostgresDialect({
+        pool: new Pool({
+          database: "test",
+          user: "root",
+          password: "root",
+        }),
+      }),
+      migrations: {
+        migrationsRun: true,
+        migratorProps: {
+          provider: new KyselyMigrationFileProvider({
+            fs: require("fs"),
+            path: require("path"),
+            migrationFolder: path.join(__dirname, "migrations"),
+          }),
+        },
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### KyselyMigrationMergeProvider
+
+This provider can perform migration by merging multiple providers.
+
+```ts
+@Module({
+  imports: [
+    KyselyModule.register({
+      dialect: new PostgresDialect({
+        pool: new Pool({
+          database: "test",
+          user: "root",
+          password: "root",
+        }),
+      }),
+      migrations: {
+        migrationsRun: true,
+        migratorProps: {
+          provider: new KyselyMigrationMergeProvider({
+            providers: [
+              new KyselyMigrationFileProvider({
+                fs: require("fs"),
+                path: require("path"),
+                migrationFolder: path.join(__dirname, "migrations"),
+              }),
+              new KyselyMigrationClassProvider([CreateUserTable]),
+            ],
+          }),
         },
       },
     }),
@@ -197,6 +280,13 @@ export class CreateTable1710847324757 implements Migration {
   public async down(db: Kysely<any>): Promise<void> {}
 }
 ```
+
+### Options
+
+| Option    | Description                 | Default |
+| --------- | --------------------------- | ------- |
+| --type    | Type of file (ts/js/sql)    | ts      |
+| --no-down | Do not generate down method | false   |
 
 ## Troubleshooting
 
