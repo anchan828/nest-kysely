@@ -72,6 +72,19 @@ if (parsed.values.type === "ts") {
   ].filter((x) => x);
 
   writeFileSync(migrationFilePath, migrationFileContent.join("\n"));
+}
+if (parsed.values.type === "js") {
+  const migrationFileContent = [
+    `class ${migrationName}${timestamp} {`,
+    `  async up(db) {`,
+    `  }`,
+    parsed.values["no-down"] ? undefined : [`  async down(db) {`, `  }`].join("\n"),
+    `}`,
+    ``,
+    `module.exports = ${migrationName}${timestamp};`,
+  ].filter((x) => x);
+
+  writeFileSync(migrationFilePath, migrationFileContent.join("\n"));
 } else {
   writeFileSync(migrationFilePath, "");
 }

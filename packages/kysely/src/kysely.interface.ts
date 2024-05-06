@@ -1,4 +1,11 @@
-import type { IsolationLevel, KyselyConfig, Migration, MigratorProps } from "kysely";
+import type {
+  FileMigrationProviderProps,
+  IsolationLevel,
+  KyselyConfig,
+  Migration,
+  MigrationProvider,
+  MigratorProps,
+} from "kysely";
 
 export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
@@ -23,4 +30,14 @@ export interface KyselyMigrationClassProviderOptions {
    * Generates a prefix for the migration key.
    */
   prefixFn?: (index: number) => string;
+}
+
+export interface KyselyMigrationFileProviderOptions extends FileMigrationProviderProps {
+  fs: FileMigrationProviderProps["fs"] & {
+    readFile: (path: string, encoding?: BufferEncoding) => Promise<string | Buffer>;
+  };
+}
+
+export interface KyselyMigrationMergeProviderOptions {
+  providers: MigrationProvider[];
 }
