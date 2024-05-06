@@ -3,9 +3,9 @@ import * as SQLite from "better-sqlite3";
 import { Kysely, Migration, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
 import { Pool } from "pg";
-import { KyselyMigrationClassProvider } from "./kysely.migration-provider";
 import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
+import { KyselyMigrationClassProvider } from "./migration-class-provider";
 describe.each([
   {
     name: "mysql",
