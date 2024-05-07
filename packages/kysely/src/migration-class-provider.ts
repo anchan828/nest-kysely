@@ -24,8 +24,7 @@ export class KyselyMigrationClassProvider implements MigrationProvider {
 
     return this.migrations.reduce(
       (acc, migration, index) => {
-        const prefix = this.options?.prefixFn ? this.options.prefixFn(index) : index.toString().padStart(8, "0");
-        const migrationKey = `${prefix}-${migration.name}`;
+        const migrationKey = this.getMigrationKey(migration, index);
         const obj = new migration();
         acc[migrationKey] = {
           up: obj.up.bind(obj),
@@ -35,5 +34,21 @@ export class KyselyMigrationClassProvider implements MigrationProvider {
       },
       {} as Record<string, Migration>,
     );
+  }
+
+  private getMigrationKey(migration: MigrationClass, index: number): string {
+    if (this.options?.prefixFn) {
+      return `${this.options.prefixFn(index)}-${migration.name}`;
+    }
+
+    if (this.options?.useSuffixNumberAsPrefix) {
+      const match = migration.name.match(/(.*?)(\d+)$/);
+
+      if (match) {
+        return `${match[2]}-${match[1]}`;
+      }
+    }
+
+    return `${index.toString().padStart(8, "0")}-${migration.name}`;
   }
 }

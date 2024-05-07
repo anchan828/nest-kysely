@@ -93,5 +93,33 @@ describe("KyselyMigrationProvider", () => {
         "92000000-Migration20": expect.anything(),
       });
     });
+
+    it("should get migrations (useSuffixNumberAsPrefix)", async () => {
+      const migrationClasses = Array(11)
+        .fill(0)
+        .map((_, i) => {
+          const MigrationClass = class implements Migration {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            public async up(db: Kysely<any>): Promise<void> {}
+          };
+          Object.defineProperty(MigrationClass, "name", { value: `Migration${i}` });
+          return MigrationClass;
+        });
+
+      const provider = new KyselyMigrationClassProvider(migrationClasses, { useSuffixNumberAsPrefix: true });
+      await expect(provider.getMigrations()).resolves.toStrictEqual({
+        "0-Migration": expect.anything(),
+        "1-Migration": expect.anything(),
+        "2-Migration": expect.anything(),
+        "3-Migration": expect.anything(),
+        "4-Migration": expect.anything(),
+        "5-Migration": expect.anything(),
+        "6-Migration": expect.anything(),
+        "7-Migration": expect.anything(),
+        "8-Migration": expect.anything(),
+        "9-Migration": expect.anything(),
+        "10-Migration": expect.anything(),
+      });
+    });
   });
 });
