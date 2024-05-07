@@ -1,11 +1,15 @@
 import { Test } from "@nestjs/testing";
 import * as SQLite from "better-sqlite3";
+import { mkdtempSync, writeFileSync } from "fs";
 import { Kysely, Migration, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
+import { tmpdir } from "os";
+import { resolve } from "path";
 import { Pool } from "pg";
 import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
 import { KyselyMigrationClassProvider } from "./migration-class-provider";
+import { KyselyMigrationFileProvider } from "./migration-file-provider";
 describe.each([
   {
     name: "mysql",
@@ -166,6 +170,44 @@ describe.each([
       await db.schema.dropTable("kysely_migration").execute();
       await db.schema.dropTable("kysely_migration_lock").execute();
 
+      await app.close();
+    });
+  });
+
+  describe("migrationBefore / migrationAfter ", () => {
+    it("should run migrationBefore / migrationAfter", async () => {
+      const reRunnableMigrationDir = mkdtempSync(resolve(tmpdir(), "kysely-re-runnable-migration-"));
+
+      writeFileSync(resolve(reRunnableMigrationDir, "test.sql"), "SELECT 1;");
+      const migrateBeforeMock = jest.fn();
+      const migrateAfterMock = jest.fn();
+      const app = await Test.createTestingModule({
+        imports: [
+          KyselyModule.register({
+            dialect: createDialect(),
+
+            migrations: {
+              migrationsRun: true,
+              migratorProps: {
+                provider: new KyselyMigrationFileProvider({
+                  fs: require("fs/promises"),
+                  path: require("path"),
+                  migrationFolder: reRunnableMigrationDir,
+                }),
+              },
+              migrateBefore: migrateBeforeMock,
+              migrateAfter: migrateAfterMock,
+            },
+          }),
+        ],
+      }).compile();
+      await app.init();
+
+      expect(migrateBeforeMock).toHaveBeenCalledTimes(1);
+      expect(migrateAfterMock).toHaveBeenCalledTimes(1);
+      const db = app.get(KyselyService).db;
+      await db.schema.dropTable("kysely_migration").execute();
+      await db.schema.dropTable("kysely_migration_lock").execute();
       await app.close();
     });
   });

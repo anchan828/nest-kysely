@@ -1,6 +1,7 @@
 import type {
   FileMigrationProviderProps,
   IsolationLevel,
+  Kysely,
   KyselyConfig,
   Migration,
   MigrationProvider,
@@ -11,6 +12,15 @@ export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
   migratorProps?: Omit<MigratorProps, "db">;
   throwMigrationError?: boolean;
+
+  /**
+   * Callback that runs before the migration.
+   */
+  migrateBefore?: (db: Kysely<any>) => Promise<void>;
+  /**
+   * Callback that runs after the migration.
+   */
+  migrateAfter?: (db: Kysely<any>) => Promise<void>;
 }
 
 export interface KyselyModuleOptions extends KyselyConfig {
