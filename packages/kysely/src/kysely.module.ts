@@ -32,6 +32,22 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
   async onModuleInit(): Promise<void> {
     const migratorProps = this.options.migrations?.migratorProps;
     if (this.options.migrations?.migrationsRun && migratorProps) {
+      const supportsTransactionalDdl = this.kysely.getExecutor().adapter.supportsTransactionalDdl;
+
+      if (this.options.migrations?.migrateBefore) {
+        try {
+          await (supportsTransactionalDdl
+            ? this.kysely.transaction().execute(this.options.migrations.migrateBefore)
+            : this.kysely.connection().execute(this.options.migrations.migrateBefore));
+        } catch (error) {
+          if (this.options.migrations?.throwMigrationError) {
+            throw error;
+          } else {
+            this.#logger.error(error);
+          }
+        }
+      }
+
       const migrator = new Migrator({ db: this.kysely, ...migratorProps });
       const { error } = await migrator.migrateToLatest();
       if (error) {
@@ -39,6 +55,20 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
           throw error;
         } else {
           this.#logger.error(error);
+        }
+      }
+
+      if (this.options.migrations?.migrateAfter) {
+        try {
+          await (supportsTransactionalDdl
+            ? this.kysely.transaction().execute(this.options.migrations.migrateAfter)
+            : this.kysely.connection().execute(this.options.migrations.migrateAfter));
+        } catch (error) {
+          if (this.options.migrations?.throwMigrationError) {
+            throw error;
+          } else {
+            this.#logger.error(error);
+          }
         }
       }
     }
