@@ -42,7 +42,11 @@ export class KyselyMigrationClassProvider implements MigrationProvider {
     }
 
     if (this.options?.useSuffixNumberAsPrefix) {
-      const match = migration.name.match(/(.*?)(\d+)$/);
+      if (migration.name.length > 500) {
+        throw new Error("Migration name is too long. It should be less than 500 characters.");
+      }
+
+      const match = migration.name.match(/^(.*?)(\d+)$/);
 
       if (match) {
         return `${match[2]}-${match[1]}`;
