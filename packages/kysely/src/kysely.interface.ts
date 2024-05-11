@@ -7,6 +7,7 @@ import type {
   MigrationProvider,
   MigratorProps,
 } from "kysely";
+import { RepeatableMigratorProps } from "./repeatable";
 
 export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
@@ -23,8 +24,24 @@ export interface KyselyMigrationOptions {
   migrateAfter?: (db: Kysely<any>) => Promise<void>;
 }
 
+export interface KyselyRepeatableMigrationOptions {
+  migrationsRun?: boolean;
+  migratorProps?: Omit<RepeatableMigratorProps, "db">;
+  throwMigrationError?: boolean;
+
+  /**
+   * Callback that runs before the migration.
+   */
+  migrateBefore?: (db: Kysely<any>) => Promise<void>;
+  /**
+   * Callback that runs after the migration.
+   */
+  migrateAfter?: (db: Kysely<any>) => Promise<void>;
+}
+
 export interface KyselyModuleOptions extends KyselyConfig {
   migrations?: KyselyMigrationOptions;
+  repeatableMigrations?: KyselyRepeatableMigrationOptions;
 }
 
 export interface KyselyTransactionalOptions {

@@ -288,6 +288,35 @@ export class CreateTable1710847324757 implements Migration {
 | --type    | Type of file (ts/js/sql)    | ts      |
 | --no-down | Do not generate down method | false   |
 
+## Repeatable Migrations
+
+This is a feature to support migrations that need to be regenerated multiple times, such as views/functions/triggers/etc. Unlike migrations that are executed only once, it compares the checksum of the SQL to be executed to determine the need for migration.
+
+```ts
+KyselyModule.register({
+  dialect: createDialect(),
+  repeatableMigrations: {
+    migrationsRun: true,
+    migratorProps: {
+      provider: new KyselyRepeatableMigrationSqlFileProvider({
+        sqlFiles: [resolve(__dirname, "user-view.sql")],
+        sqlTexts: [{ name: "test", sql: "SELECT 1;" }],
+      }),
+    },
+  },
+});
+```
+
+| name      | hash                             | timestamp                |
+| --------- | -------------------------------- | ------------------------ |
+| user-view | 6c7e36422f79696602e19079534b4076 | 2024-05-11T17:04:20.211Z |
+| test      | e7d6c7d4d9b1b0b4c7f5d7b3d5e9d4d4 | 2024-05-11T17:04:20.211Z |
+
+### Note
+
+- Once the file is renamed, the migration is executed even if the contents have not changed.
+- Views/Functions/Triggers created by Repeatable Migration are not automatically deleted (or update/rename) by simply deleting the corresponding SQL, so please delete them using the normal migration function.
+
 ## Troubleshooting
 
 ### Nest can't resolve dependencies of the XXX. Please make sure that the "Symbol(KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL)" property is available in the current context.

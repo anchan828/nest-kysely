@@ -1,9 +1,10 @@
-import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleInit } from "@nestjs/common";
+import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleInit, Type } from "@nestjs/common";
 import { Kysely, Migrator } from "kysely";
 import { KYSELY } from "./kysely.constant";
-import { KyselyModuleOptions } from "./kysely.interface";
+import { KyselyMigrationOptions, KyselyModuleOptions, KyselyRepeatableMigrationOptions } from "./kysely.interface";
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from "./kysely.module-definition";
 import { KyselyService } from "./kysely.service";
+import { RepeatableMigrator } from "./repeatable";
 
 @Global()
 @Module({
@@ -30,46 +31,50 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
   }
 
   async onModuleInit(): Promise<void> {
-    const migratorProps = this.options.migrations?.migratorProps;
-    if (this.options.migrations?.migrationsRun && migratorProps) {
+    await this.#runMigrations(Migrator, this.options.migrations);
+    await this.#runMigrations(RepeatableMigrator, this.options.repeatableMigrations);
+  }
+
+  async #runMigrations(
+    MigratorCreator: Type<Migrator | RepeatableMigrator>,
+    options?: KyselyMigrationOptions | KyselyRepeatableMigrationOptions,
+  ): Promise<void> {
+    const migratorProps = options?.migratorProps;
+
+    if (!(options?.migrationsRun && migratorProps)) {
+      return;
+    }
+
+    await this.#runMigrationHook(options.migrateBefore, options.throwMigrationError);
+
+    const migrator = new MigratorCreator({ db: this.kysely, ...migratorProps });
+    const { error } = await migrator.migrateToLatest();
+    if (error) {
+      if (options.throwMigrationError) {
+        throw error;
+      } else {
+        this.#logger.error(error);
+      }
+    }
+
+    await this.#runMigrationHook(options.migrateAfter, options.throwMigrationError);
+  }
+
+  async #runMigrationHook(hook?: (db: Kysely<any>) => Promise<void>, throwMigrationError?: boolean): Promise<void> {
+    if (!hook) {
+      return;
+    }
+
+    try {
       const supportsTransactionalDdl = this.kysely.getExecutor().adapter.supportsTransactionalDdl;
-
-      if (this.options.migrations?.migrateBefore) {
-        try {
-          await (supportsTransactionalDdl
-            ? this.kysely.transaction().execute(this.options.migrations.migrateBefore)
-            : this.kysely.connection().execute(this.options.migrations.migrateBefore));
-        } catch (error) {
-          if (this.options.migrations?.throwMigrationError) {
-            throw error;
-          } else {
-            this.#logger.error(error);
-          }
-        }
-      }
-
-      const migrator = new Migrator({ db: this.kysely, ...migratorProps });
-      const { error } = await migrator.migrateToLatest();
-      if (error) {
-        if (this.options.migrations?.throwMigrationError) {
-          throw error;
-        } else {
-          this.#logger.error(error);
-        }
-      }
-
-      if (this.options.migrations?.migrateAfter) {
-        try {
-          await (supportsTransactionalDdl
-            ? this.kysely.transaction().execute(this.options.migrations.migrateAfter)
-            : this.kysely.connection().execute(this.options.migrations.migrateAfter));
-        } catch (error) {
-          if (this.options.migrations?.throwMigrationError) {
-            throw error;
-          } else {
-            this.#logger.error(error);
-          }
-        }
+      await (supportsTransactionalDdl
+        ? this.kysely.transaction().execute(hook)
+        : this.kysely.connection().execute(hook));
+    } catch (error) {
+      if (throwMigrationError) {
+        throw error;
+      } else {
+        this.#logger.error(error);
       }
     }
   }
