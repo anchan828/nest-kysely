@@ -8,7 +8,7 @@ import {
 } from "./interface";
 
 export class RepeatableMigrator {
-  #MIGRATION_LOCK_ID = "Repeatable_migration_lock";
+  #MIGRATION_LOCK_ID = "repeatable_migration_lock";
 
   #props: Required<RepeatableMigratorProps>;
 
