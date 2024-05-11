@@ -10,6 +10,7 @@ import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
 import { KyselyMigrationClassProvider } from "./migration-class-provider";
 import { KyselyMigrationFileProvider } from "./migration-file-provider";
+import { KyselyRepeatableMigrationSqlFileProvider } from "./repeatable";
 describe.each([
   {
     name: "mysql",
@@ -93,6 +94,14 @@ describe.each([
                 provider: new KyselyMigrationClassProvider([Migration1]),
               },
             },
+            repeatableMigrations: {
+              migrationsRun: true,
+              migratorProps: {
+                provider: new KyselyRepeatableMigrationSqlFileProvider({
+                  sqlTexts: [{ name: "test", sql: "SELECT 1;" }],
+                }),
+              },
+            },
           }),
         ],
       }).compile();
@@ -102,12 +111,16 @@ describe.each([
       await expect(db.introspection.getTables({ withInternalKyselyTables: true })).resolves.toMatchObject([
         expect.objectContaining({ name: "kysely_migration" }),
         expect.objectContaining({ name: "kysely_migration_lock" }),
+        expect.objectContaining({ name: "kysely_repeatable_migration" }),
+        expect.objectContaining({ name: "kysely_repeatable_migration_lock" }),
         expect.objectContaining({ name: "user" }),
       ]);
 
       await db.schema.dropTable("user").execute();
       await db.schema.dropTable("kysely_migration").execute();
       await db.schema.dropTable("kysely_migration_lock").execute();
+      await db.schema.dropTable("kysely_repeatable_migration").execute();
+      await db.schema.dropTable("kysely_repeatable_migration_lock").execute();
 
       await app.close();
     });
