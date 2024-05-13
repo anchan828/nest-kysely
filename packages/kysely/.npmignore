@@ -1,6 +1,4 @@
 *
 !dist/**/*
 dist/**/*.tsbuildinfo
-dist/**/*.js.map
-dist/**/*.ts.map
 !cli.js
