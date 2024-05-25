@@ -1,9 +1,9 @@
 import * as SQLite from "better-sqlite3";
-import { writeFileSync } from "fs";
 import { Kysely, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
-import { tmpdir } from "os";
-import { resolve } from "path";
+import { writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { resolve } from "node:path";
 import { Pool } from "pg";
 import { KyselyRepeatableMigrationSqlFileProvider } from "./migration-sql-file-provider";
 import { RepeatableMigrator } from "./migrator";

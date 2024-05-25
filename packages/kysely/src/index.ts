@@ -5,14 +5,15 @@ export {
   KyselyMigrationMergeProviderOptions,
   KyselyMigrationOptions,
   KyselyModuleOptions,
+  KyselyRepeatableMigrationOptions,
   KyselyTransactionalOptions,
+  MigrationClass,
 } from "./kysely.interface";
 export { KyselyModule } from "./kysely.module";
 export { KyselyService } from "./kysely.service";
-export { KyselyMigrationClassProvider } from "./migration-class-provider";
-export { KyselyMigrationFileProvider } from "./migration-file-provider";
-export { KyselyMigrationMergeProvider } from "./migration-merge-provider";
-export { RemoveNullPropertyPlugin } from "./remove-null-property.plugin";
+export { KyselyMigrationClassProvider } from "./migrations/migration-class-provider";
+export { KyselyMigrationFileProvider } from "./migrations/migration-file-provider";
+export { KyselyMigrationMergeProvider } from "./migrations/migration-merge-provider";
 export {
   KyselyRepeatableMigrationSqlFileProvider,
   KyselyRepeatableMigrationSqlFileProviderOptions,
@@ -23,4 +24,5 @@ export {
   RepeatableMigrationResultSet,
   RepeatableMigrator,
   RepeatableMigratorProps,
-} from "./repeatable";
+} from "./migrations/repeatable";
+export { RemoveNullPropertyPlugin } from "./plugins/remove-null-property.plugin";
