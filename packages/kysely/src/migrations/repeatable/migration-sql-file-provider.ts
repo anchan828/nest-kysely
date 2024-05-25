@@ -1,6 +1,6 @@
-import { createHash } from "crypto";
-import { readFile } from "fs/promises";
-import { basename } from "path";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { basename } from "node:path";
 import {
   KyselyRepeatableMigrationSqlFileProviderOptions,
   RepeatableMigration,

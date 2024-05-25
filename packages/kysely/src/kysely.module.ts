@@ -4,7 +4,7 @@ import { KYSELY } from "./kysely.constant";
 import { KyselyMigrationOptions, KyselyModuleOptions, KyselyRepeatableMigrationOptions } from "./kysely.interface";
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from "./kysely.module-definition";
 import { KyselyService } from "./kysely.service";
-import { RepeatableMigrator } from "./repeatable";
+import { RepeatableMigrator } from "./migrations/repeatable";
 
 @Global()
 @Module({

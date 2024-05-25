@@ -1,5 +1,5 @@
 import { FileMigrationProvider, Migration, MigrationProvider, sql } from "kysely";
-import { KyselyMigrationFileProviderOptions } from "./kysely.interface";
+import { KyselyMigrationFileProviderOptions } from "../kysely.interface";
 
 /**
  * Provider for generating migrations from TS/JS and SQL file.

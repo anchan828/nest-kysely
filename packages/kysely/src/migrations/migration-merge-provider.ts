@@ -1,5 +1,5 @@
 import { Migration, MigrationProvider } from "kysely";
-import { KyselyMigrationMergeProviderOptions } from "./kysely.interface";
+import { KyselyMigrationMergeProviderOptions } from "../kysely.interface";
 
 /**
  * Provider for merging migrations from multiple providers.

@@ -8,9 +8,9 @@ import { resolve } from "path";
 import { Pool } from "pg";
 import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
-import { KyselyMigrationClassProvider } from "./migration-class-provider";
-import { KyselyMigrationFileProvider } from "./migration-file-provider";
-import { KyselyRepeatableMigrationSqlFileProvider } from "./repeatable";
+import { KyselyMigrationClassProvider } from "./migrations/migration-class-provider";
+import { KyselyMigrationFileProvider } from "./migrations/migration-file-provider";
+import { KyselyRepeatableMigrationSqlFileProvider } from "./migrations/repeatable";
 describe.each([
   {
     name: "mysql",

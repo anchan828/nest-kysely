@@ -7,7 +7,7 @@ import type {
   MigrationProvider,
   MigratorProps,
 } from "kysely";
-import { RepeatableMigratorProps } from "./repeatable";
+import { RepeatableMigratorProps } from "./migrations/repeatable";
 
 export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
