@@ -84,6 +84,10 @@ describe.each([
           }
         }
       }
+
+      const migrateResultMock = jest.fn();
+      const repeatableMigrateResultMock = jest.fn();
+
       const app = await Test.createTestingModule({
         imports: [
           KyselyModule.register({
@@ -93,6 +97,7 @@ describe.each([
               migratorProps: {
                 provider: new KyselyMigrationClassProvider([Migration1]),
               },
+              migrateResult: migrateResultMock,
             },
             repeatableMigrations: {
               migrationsRun: true,
@@ -101,6 +106,7 @@ describe.each([
                   sqlTexts: [{ name: "test", sql: "SELECT 1;" }],
                 }),
               },
+              migrateResult: repeatableMigrateResultMock,
             },
           }),
         ],
@@ -114,6 +120,33 @@ describe.each([
         expect.objectContaining({ name: "kysely_repeatable_migration" }),
         expect.objectContaining({ name: "kysely_repeatable_migration_lock" }),
         expect.objectContaining({ name: "user" }),
+      ]);
+
+      expect(migrateResultMock.mock.calls).toEqual([
+        [
+          {
+            results: [
+              {
+                direction: "Up",
+                migrationName: "00000000-Migration1",
+                status: "Success",
+              },
+            ],
+          },
+        ],
+      ]);
+      expect(repeatableMigrateResultMock.mock.calls).toEqual([
+        [
+          {
+            results: [
+              {
+                migrationHash: "71568061b2970a4b7c5160fe75356e10",
+                migrationName: "test",
+                status: "Success",
+              },
+            ],
+          },
+        ],
       ]);
 
       await db.schema.dropTable("user").execute();

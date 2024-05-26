@@ -11,7 +11,7 @@ import { RepeatableMigrator } from "./migrations/repeatable";
   providers: [
     {
       provide: KYSELY,
-      useFactory: async (options: KyselyModuleOptions) => {
+      useFactory: (options: KyselyModuleOptions): Kysely<any> => {
         return new Kysely(options);
       },
       inject: [MODULE_OPTIONS_TOKEN],
@@ -48,16 +48,20 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
     await this.#runMigrationHook(options.migrateBefore, options.throwMigrationError);
 
     const migrator = new MigratorCreator({ db: this.kysely, ...migratorProps });
-    const { error } = await migrator.migrateToLatest();
-    if (error) {
+    const migrationResultSet = await migrator.migrateToLatest();
+    if (migrationResultSet.error) {
       if (options.throwMigrationError) {
-        throw error;
+        throw migrationResultSet.error;
       } else {
-        this.#logger.error(error);
+        this.#logger.error(migrationResultSet.error);
       }
     }
 
     await this.#runMigrationHook(options.migrateAfter, options.throwMigrationError);
+
+    if (options.migrateResult) {
+      await options.migrateResult(migrationResultSet as any);
+    }
   }
 
   async #runMigrationHook(hook?: (db: Kysely<any>) => Promise<void>, throwMigrationError?: boolean): Promise<void> {
