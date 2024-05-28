@@ -42,7 +42,7 @@
     "kysely": "^0.x"
   },
   "volta": {
-    "node": "20.13.1"
+    "node": "20.14.0"
   },
   "publishConfig": {
     "access": "public"
