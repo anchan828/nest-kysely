@@ -31,7 +31,7 @@
     "@nestjs/testing": "10.3.9",
     "@types/better-sqlite3": "7.6.10",
     "@types/pg": "8.11.6",
-    "better-sqlite3": "10.1.0",
+    "better-sqlite3": "11.0.0",
     "kysely": "0.27.3",
     "mysql2": "3.10.0",
     "pg": "8.12.0",
