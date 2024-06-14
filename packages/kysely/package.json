@@ -33,7 +33,7 @@
     "@types/pg": "8.11.6",
     "better-sqlite3": "11.0.0",
     "kysely": "0.27.3",
-    "mysql2": "3.10.0",
+    "mysql2": "3.10.1",
     "pg": "8.12.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1"
