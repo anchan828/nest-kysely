@@ -1,4 +1,5 @@
 import type {
+  Dialect,
   FileMigrationProviderProps,
   IsolationLevel,
   Kysely,
@@ -50,6 +51,10 @@ export interface KyselyRepeatableMigrationOptions {
 }
 
 export interface KyselyModuleOptions extends KyselyConfig {
+  /**
+   * The dialect for migrations. Use when performing migration with different users. If not set, dialect will be used.
+   */
+  migrationDialect?: Dialect;
   migrations?: KyselyMigrationOptions;
   repeatableMigrations?: KyselyRepeatableMigrationOptions;
 }

@@ -31,12 +31,23 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
   }
 
   async onModuleInit(): Promise<void> {
-    await this.#runMigrations(Migrator, this.options.migrations);
-    await this.#runMigrations(RepeatableMigrator, this.options.repeatableMigrations);
+    const migrationKysely = this.options.migrationDialect
+      ? new Kysely({
+          ...this.options,
+          dialect: this.options.migrationDialect,
+        })
+      : this.kysely;
+    await this.#runMigrations(Migrator, migrationKysely, this.options.migrations);
+    await this.#runMigrations(RepeatableMigrator, migrationKysely, this.options.repeatableMigrations);
+
+    if (this.options.migrationDialect) {
+      await migrationKysely.destroy();
+    }
   }
 
   async #runMigrations(
     MigratorCreator: Type<Migrator | RepeatableMigrator>,
+    kysely: Kysely<any>,
     options?: KyselyMigrationOptions | KyselyRepeatableMigrationOptions,
   ): Promise<void> {
     const migratorProps = options?.migratorProps;
@@ -45,9 +56,9 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
       return;
     }
 
-    await this.#runMigrationHook(options.migrateBefore, options.throwMigrationError);
+    await this.#runMigrationHook(kysely, options.migrateBefore, options.throwMigrationError);
 
-    const migrator = new MigratorCreator({ db: this.kysely, ...migratorProps });
+    const migrator = new MigratorCreator({ db: kysely, ...migratorProps });
     const migrationResultSet = await migrator.migrateToLatest();
     if (migrationResultSet.error) {
       if (options.throwMigrationError) {
@@ -57,23 +68,25 @@ export class KyselyModule extends ConfigurableModuleClass implements OnModuleIni
       }
     }
 
-    await this.#runMigrationHook(options.migrateAfter, options.throwMigrationError);
+    await this.#runMigrationHook(kysely, options.migrateAfter, options.throwMigrationError);
 
     if (options.migrateResult) {
       await options.migrateResult(migrationResultSet as any);
     }
   }
 
-  async #runMigrationHook(hook?: (db: Kysely<any>) => Promise<void>, throwMigrationError?: boolean): Promise<void> {
+  async #runMigrationHook(
+    kysely: Kysely<any>,
+    hook?: (db: Kysely<any>) => Promise<void>,
+    throwMigrationError?: boolean,
+  ): Promise<void> {
     if (!hook) {
       return;
     }
 
     try {
-      const supportsTransactionalDdl = this.kysely.getExecutor().adapter.supportsTransactionalDdl;
-      await (supportsTransactionalDdl
-        ? this.kysely.transaction().execute(hook)
-        : this.kysely.connection().execute(hook));
+      const supportsTransactionalDdl = kysely.getExecutor().adapter.supportsTransactionalDdl;
+      await (supportsTransactionalDdl ? kysely.transaction().execute(hook) : kysely.connection().execute(hook));
     } catch (error) {
       if (throwMigrationError) {
         throw error;

@@ -3,6 +3,7 @@ import * as SQLite from "better-sqlite3";
 import { mkdtempSync, writeFileSync } from "fs";
 import { Kysely, Migration, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
+import { randomUUID } from "node:crypto";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import { Pool } from "pg";
@@ -11,6 +12,9 @@ import { KyselyService } from "./kysely.service";
 import { KyselyMigrationClassProvider } from "./migrations/migration-class-provider";
 import { KyselyMigrationFileProvider } from "./migrations/migration-file-provider";
 import { KyselyRepeatableMigrationSqlFileProvider } from "./migrations/repeatable";
+
+const sqliteFilePath = resolve(tmpdir(), "kysely-sqlite-" + randomUUID() + ".db");
+
 describe.each([
   {
     name: "mysql",
@@ -38,7 +42,7 @@ describe.each([
     name: "sqlite",
     createDialect: () =>
       new SqliteDialect({
-        database: new SQLite(":memory:"),
+        database: new SQLite(sqliteFilePath),
       }),
   },
 ])("KyselyModule: $name", ({ name, createDialect }) => {
@@ -211,6 +215,39 @@ describe.each([
         ],
       }).compile();
       await expect(app.init()).rejects.toThrowError("Migration failed");
+
+      const db = app.get(KyselyService).db;
+      await db.schema.dropTable("kysely_migration").execute();
+      await db.schema.dropTable("kysely_migration_lock").execute();
+
+      await app.close();
+    });
+
+    it("should use migrationDialect", async () => {
+      const migrationDialect = createDialect();
+      const driverSpy = jest.spyOn(migrationDialect, "createDriver");
+
+      class Migration1 implements Migration {
+        public async up(): Promise<void> {}
+      }
+      const app = await Test.createTestingModule({
+        imports: [
+          KyselyModule.register({
+            dialect: createDialect(),
+            migrationDialect,
+            migrations: {
+              migrationsRun: true,
+              migratorProps: {
+                provider: new KyselyMigrationClassProvider([Migration1]),
+              },
+            },
+          }),
+        ],
+      }).compile();
+
+      await app.init();
+
+      expect(driverSpy).toHaveBeenCalledTimes(1);
 
       const db = app.get(KyselyService).db;
       await db.schema.dropTable("kysely_migration").execute();
