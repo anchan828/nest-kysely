@@ -63,7 +63,8 @@ export interface KyselyTransactionalOptions {
   isolationLevel?: IsolationLevel;
 }
 
-export interface MigrationClass extends Function {
+export interface MigrationClass {
+  readonly name: string;
   new (...args: any[]): Migration;
 }
 
