@@ -22,7 +22,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "copy:license": "cp ../../LICENSE ./",
-    "lint": "TIMING=1 eslint --ignore-path ../../.eslintignore '**/*.ts'",
+    "lint": "TIMING=1 eslint '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --coverage --runInBand --detectOpenHandles",
     "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand --logHeapUsage",

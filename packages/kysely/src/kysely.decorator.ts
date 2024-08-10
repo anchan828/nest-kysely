@@ -7,7 +7,7 @@ import { KyselyTransactionalOptions } from "./kysely.interface";
 export function KyselyTransactional(options: KyselyTransactionalOptions = {}): MethodDecorator {
   const kyselyInjection = Inject(KYSELY);
 
-  return (target: Object, propertyName: string | symbol, descriptor: PropertyDescriptor) => {
+  return (target: object, propertyName: string | symbol, descriptor: PropertyDescriptor) => {
     kyselyInjection(target, KYSELY_TRANSACTIONAL_DECORATOR_SYMBOL);
     const originalMethod = descriptor.value;
 

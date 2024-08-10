@@ -1,10 +1,12 @@
 import { Test } from "@nestjs/testing";
 import * as SQLite from "better-sqlite3";
 import { mkdtempSync, writeFileSync } from "fs";
+import * as fsPromises from "fs/promises";
 import { Kysely, Migration, MysqlDialect, PostgresDialect, SqliteDialect } from "kysely";
 import { createPool } from "mysql2";
 import { randomUUID } from "node:crypto";
 import { tmpdir } from "os";
+import * as path from "path";
 import { resolve } from "path";
 import { Pool } from "pg";
 import { KyselyModule } from "./kysely.module";
@@ -273,8 +275,8 @@ describe.each([
               migrationsRun: true,
               migratorProps: {
                 provider: new KyselyMigrationFileProvider({
-                  fs: require("fs/promises"),
-                  path: require("path"),
+                  fs: fsPromises,
+                  path,
                   migrationFolder: reRunnableMigrationDir,
                 }),
               },
