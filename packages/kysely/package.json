@@ -12,11 +12,25 @@
   },
   "license": "MIT",
   "author": "anchan828 <anchan828@gmail.com>",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "types": "./dist/cjs/index.d.ts",
+      "default": "./dist/cjs/index.js"
+    }
+  },
   "bin": "cli.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "copy:license": "cp ../../LICENSE ./",
     "lint": "TIMING=1 eslint '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
