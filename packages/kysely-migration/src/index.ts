@@ -4,9 +4,7 @@ export {
   KyselyMigrationMergeProviderOptions,
   MigrationClass,
 } from "./interfaces";
-export { KyselyMigrationClassProvider } from "./migration-class-provider";
-export { KyselyMigrationFileProvider } from "./migration-file-provider";
-export { KyselyMigrationMergeProvider } from "./migration-merge-provider";
+export { KyselyMigrationClassProvider, KyselyMigrationFileProvider, KyselyMigrationMergeProvider } from "./providers";
 export {
   KyselyRepeatableMigrationSqlFileProvider,
   KyselyRepeatableMigrationSqlFileProviderOptions,
