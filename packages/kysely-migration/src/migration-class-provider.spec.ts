@@ -1,4 +1,4 @@
-import { Kysely, Migration } from "kysely";
+import { Kysely, Migration, Migrator } from "kysely";
 import { KyselyMigrationClassProvider } from "./migration-class-provider";
 
 describe("KyselyMigrationProvider", () => {
@@ -107,6 +107,7 @@ describe("KyselyMigrationProvider", () => {
         });
 
       const provider = new KyselyMigrationClassProvider(migrationClasses, { useSuffixNumberAsPrefix: true });
+      
       await expect(provider.getMigrations()).resolves.toStrictEqual({
         "0-Migration": expect.anything(),
         "1-Migration": expect.anything(),

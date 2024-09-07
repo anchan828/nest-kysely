@@ -1,5 +1,5 @@
 import { Migration, MigrationProvider } from "kysely";
-import { KyselyMigrationClassProviderOptions, MigrationClass } from "../kysely.interface";
+import { KyselyMigrationClassProviderOptions, MigrationClass } from "./interfaces";
 
 /**
  * Provider for generating migrations from classes.

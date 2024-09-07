@@ -1,3 +1,8 @@
+import {
+  KyselyMigrationClassProvider,
+  KyselyMigrationFileProvider,
+  KyselyRepeatableMigrationSqlFileProvider,
+} from "@anchan828/kysely-migration";
 import { Test } from "@nestjs/testing";
 import * as SQLite from "better-sqlite3";
 import { mkdtempSync, writeFileSync } from "fs";
@@ -11,9 +16,6 @@ import { resolve } from "path";
 import { Pool } from "pg";
 import { KyselyModule } from "./kysely.module";
 import { KyselyService } from "./kysely.service";
-import { KyselyMigrationClassProvider } from "./migrations/migration-class-provider";
-import { KyselyMigrationFileProvider } from "./migrations/migration-file-provider";
-import { KyselyRepeatableMigrationSqlFileProvider } from "./migrations/repeatable";
 
 const sqliteFilePath = resolve(tmpdir(), "kysely-sqlite-" + randomUUID() + ".db");
 
