@@ -1,15 +1,5 @@
-import type {
-  Dialect,
-  FileMigrationProviderProps,
-  IsolationLevel,
-  Kysely,
-  KyselyConfig,
-  Migration,
-  MigrationProvider,
-  MigrationResultSet,
-  MigratorProps,
-} from "kysely";
-import { RepeatableMigrationResultSet, RepeatableMigratorProps } from "./migrations/repeatable";
+import { RepeatableMigrationResultSet, RepeatableMigratorProps } from "@anchan828/kysely-migration";
+import type { Dialect, IsolationLevel, Kysely, KyselyConfig, MigrationResultSet, MigratorProps } from "kysely";
 
 export interface KyselyMigrationOptions {
   migrationsRun?: boolean;
@@ -61,33 +51,4 @@ export interface KyselyModuleOptions extends KyselyConfig {
 
 export interface KyselyTransactionalOptions {
   isolationLevel?: IsolationLevel;
-}
-
-export interface MigrationClass {
-  readonly name: string;
-  new (...args: any[]): Migration;
-}
-
-export interface KyselyMigrationClassProviderOptions {
-  /**
-   * Generates a prefix for the migration key.
-   */
-  prefixFn?: (index: number) => string;
-
-  /**
-   * If true, the number of the migration will be used as a prefix.
-   * For example, if the migration class name is CreateUserTable00000001, the migration name will be `00000001-CreateUserTable`.
-   * @default false
-   */
-  useSuffixNumberAsPrefix?: boolean;
-}
-
-export interface KyselyMigrationFileProviderOptions extends FileMigrationProviderProps {
-  fs: FileMigrationProviderProps["fs"] & {
-    readFile: (path: string, encoding?: BufferEncoding) => Promise<string | Buffer>;
-  };
-}
-
-export interface KyselyMigrationMergeProviderOptions {
-  providers: MigrationProvider[];
 }

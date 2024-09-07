@@ -107,6 +107,7 @@ describe("KyselyMigrationProvider", () => {
         });
 
       const provider = new KyselyMigrationClassProvider(migrationClasses, { useSuffixNumberAsPrefix: true });
+
       await expect(provider.getMigrations()).resolves.toStrictEqual({
         "0-Migration": expect.anything(),
         "1-Migration": expect.anything(),

@@ -1,10 +1,10 @@
+import { RepeatableMigrator } from "@anchan828/kysely-migration";
 import { Global, Inject, Logger, Module, OnApplicationShutdown, OnModuleInit, Type } from "@nestjs/common";
 import { Kysely, Migrator } from "kysely";
 import { KYSELY } from "./kysely.constant";
 import { KyselyMigrationOptions, KyselyModuleOptions, KyselyRepeatableMigrationOptions } from "./kysely.interface";
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from "./kysely.module-definition";
 import { KyselyService } from "./kysely.service";
-import { RepeatableMigrator } from "./migrations/repeatable";
 
 @Global()
 @Module({
