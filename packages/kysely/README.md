@@ -8,7 +8,7 @@ Module for using [kysely](https://www.npmjs.com/package/kysely) with nestjs.
 ## Installation
 
 ```bash
-$ npm i --save @anchan828/nest-kysely kysely
+$ npm i --save @anchan828/nest-kysely @anchan828/kysely-migration kysely
 ```
 
 ## Quick Start
@@ -48,26 +48,10 @@ export class ExampleService {
 
 ## Migration
 
-If you want to do migration at module initialization time like TypeORM, use the migrations option.
-This package provides some migration providers.
-
-### KyselyMigrationClassProvider
-
-This provider can perform migration by passing the Migration class.
+If you want to perform migration at the time of application initialization, use the migrations property.
 
 ```ts
-import { Kysely, Migration } from "kysely";
-import { KyselyMigrationClassProvider } from "@anchan828/nest-kysely";
-
-class CreateUserTable implements Migration {
-  public async up(db: Kysely<any>): Promise<void> {
-    await db.schema
-      .createTable("user")
-      .addColumn("id", "integer", (cb) => cb.primaryKey().autoIncrement().notNull())
-      .addColumn("name", "varchar(255)", (cb) => cb.notNull())
-      .execute();
-  }
-}
+import { SqliteDialect, FileMigrationProvider } from "kysely";
 
 @Module({
   imports: [
@@ -78,45 +62,10 @@ class CreateUserTable implements Migration {
       migrations: {
         migrationsRun: true,
         migratorProps: {
-          provider: new KyselyMigrationClassProvider([CreateUserTable]),
-        },
-      },
-    }),
-  ],
-})
-export class AppModule {}
-```
-
-### KyselyMigrationFileProvider
-
-This provider can perform migration by passing the migrations directory path. This provider wraps the FileMigrationProvider provided by kysely and supports SQL files.
-
-```shell
-migrations
-├── 1715003546247-CreateUserTable.ts
-├── 1715003558664-CreateUserInsertTrigger.sql
-├── 1715003568628-UpdateUserTable.sql
-└── 1715003583015-CreateUserTableIndex.js
-```
-
-```ts
-@Module({
-  imports: [
-    KyselyModule.register({
-      dialect: new PostgresDialect({
-        pool: new Pool({
-          database: "test",
-          user: "root",
-          password: "root",
-        }),
-      }),
-      migrations: {
-        migrationsRun: true,
-        migratorProps: {
-          provider: new KyselyMigrationFileProvider({
-            fs: require("fs"),
-            path: require("path"),
-            migrationFolder: path.join(__dirname, "migrations"),
+          provider: new FileMigrationProvider({
+            fs,
+            path,
+            migrationFolder: "path/to/migrations/folder",
           }),
         },
       },
@@ -126,41 +75,7 @@ migrations
 export class AppModule {}
 ```
 
-### KyselyMigrationMergeProvider
-
-This provider can perform migration by merging multiple providers.
-
-```ts
-@Module({
-  imports: [
-    KyselyModule.register({
-      dialect: new PostgresDialect({
-        pool: new Pool({
-          database: "test",
-          user: "root",
-          password: "root",
-        }),
-      }),
-      migrations: {
-        migrationsRun: true,
-        migratorProps: {
-          provider: new KyselyMigrationMergeProvider({
-            providers: [
-              new KyselyMigrationFileProvider({
-                fs: require("fs"),
-                path: require("path"),
-                migrationFolder: path.join(__dirname, "migrations"),
-              }),
-              new KyselyMigrationClassProvider([CreateUserTable]),
-            ],
-          }),
-        },
-      },
-    }),
-  ],
-})
-export class AppModule {}
-```
+I several means to make migration easier to use. Please see the [kysely-migration](https://www.npmjs.com/package/@anchan828/kysely-migration) package for more information.
 
 ## Transaction
 
@@ -287,30 +202,6 @@ export class CreateTable1710847324757 implements Migration {
 | --------- | --------------------------- | ------- |
 | --type    | Type of file (ts/js/sql)    | ts      |
 | --no-down | Do not generate down method | false   |
-
-## Repeatable Migrations
-
-This is a feature to support migrations that need to be regenerated multiple times, such as views/functions/triggers/etc. Unlike migrations that are executed only once, it compares the checksum of the SQL to be executed to determine the need for migration.
-
-```ts
-KyselyModule.register({
-  dialect: createDialect(),
-  repeatableMigrations: {
-    migrationsRun: true,
-    migratorProps: {
-      provider: new KyselyRepeatableMigrationSqlFileProvider({
-        sqlFiles: [resolve(__dirname, "user-view.sql")],
-        sqlTexts: [{ name: "test", sql: "SELECT 1;" }],
-      }),
-    },
-  },
-});
-```
-
-| name      | hash                             | timestamp                |
-| --------- | -------------------------------- | ------------------------ |
-| user-view | 6c7e36422f79696602e19079534b4076 | 2024-05-11T17:04:20.211Z |
-| test      | e7d6c7d4d9b1b0b4c7f5d7b3d5e9d4d4 | 2024-05-11T17:04:20.211Z |
 
 ### Note
 

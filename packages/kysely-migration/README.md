@@ -3,7 +3,7 @@
 ![npm](https://img.shields.io/npm/v/@anchan828/kysely-migration.svg)
 ![NPM](https://img.shields.io/npm/l/@anchan828/kysely-migration.svg)
 
-Module for using [kysely](https://www.npmjs.com/package/kysely) with nestjs.
+Migration library for [kysely](https://www.npmjs.com/package/kysely).
 
 ## Installation
 
