@@ -53,7 +53,7 @@
     "supertest": "7.0.0"
   },
   "peerDependencies": {
-    "kysely": "^0.x"
+    "kysely": "^0.27.4"
   },
   "volta": {
     "node": "20.18.0"
