@@ -40,7 +40,7 @@
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "7.6.11",
+    "@types/better-sqlite3": "7.6.12",
     "@types/pg": "8.11.10",
     "better-sqlite3": "11.5.0",
     "kysely": "0.27.4",
