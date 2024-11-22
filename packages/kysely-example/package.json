@@ -42,7 +42,7 @@
     "@nestjs/cli": "10.4.7",
     "@nestjs/schematics": "10.2.3",
     "@nestjs/testing": "10.4.7",
-    "@types/better-sqlite3": "7.6.11",
+    "@types/better-sqlite3": "7.6.12",
     "@types/pg": "8.11.10",
     "@types/supertest": "6.0.2",
     "better-sqlite3": "11.5.0",
