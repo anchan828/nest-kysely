@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-kysely",
-  "version": "0.7.15",
+  "version": "0.7.16",
   "description": "NestJS module for Kysely",
   "homepage": "https://github.com/anchan828/nest-kysely#readme",
   "bugs": {
@@ -56,7 +56,7 @@
     "kysely": "^0.27.4"
   },
   "dependencies": {
-    "@anchan828/kysely-migration": "^0.7.15"
+    "@anchan828/kysely-migration": "^0.7.16"
   },
   "volta": {
     "node": "22.12.0"
