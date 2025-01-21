@@ -45,7 +45,7 @@
     "@types/better-sqlite3": "7.6.12",
     "@types/pg": "8.11.10",
     "@types/supertest": "6.0.2",
-    "better-sqlite3": "11.8.0",
+    "better-sqlite3": "11.8.1",
     "jest-mock-extended": "3.0.7",
     "kysely": "0.27.5",
     "mysql2": "3.12.0",
