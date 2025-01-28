@@ -223,8 +223,7 @@ describe.each([
       const db = app.get(KyselyService).db;
       await db.schema.dropTable("kysely_migration").execute();
       await db.schema.dropTable("kysely_migration_lock").execute();
-
-      await app.close();
+      await db.destroy();
     });
 
     it("should use migrationDialect", async () => {
