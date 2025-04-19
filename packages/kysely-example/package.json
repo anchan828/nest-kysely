@@ -35,7 +35,7 @@
     "@nestjs/common": "11.0.20",
     "@nestjs/core": "11.0.20",
     "@nestjs/platform-express": "11.0.20",
-    "express": "4.21.2",
+    "express": "5.1.0",
     "kysely": "0.27.6"
   },
   "devDependencies": {
