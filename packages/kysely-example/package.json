@@ -32,16 +32,16 @@
   "dependencies": {
     "@anchan828/kysely-migration": "^0.8.12",
     "@anchan828/nest-kysely": "^0.8.12",
-    "@nestjs/common": "11.0.20",
-    "@nestjs/core": "11.0.20",
-    "@nestjs/platform-express": "11.0.20",
+    "@nestjs/common": "11.1.0",
+    "@nestjs/core": "11.1.0",
+    "@nestjs/platform-express": "11.1.0",
     "express": "4.21.2",
     "kysely": "0.27.6"
   },
   "devDependencies": {
-    "@nestjs/cli": "11.0.6",
+    "@nestjs/cli": "11.0.7",
     "@nestjs/schematics": "11.0.5",
-    "@nestjs/testing": "11.0.20",
+    "@nestjs/testing": "11.1.0",
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "8.11.13",
     "@types/supertest": "6.0.3",
