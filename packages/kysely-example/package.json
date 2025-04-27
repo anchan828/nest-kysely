@@ -43,7 +43,7 @@
     "@nestjs/schematics": "11.0.5",
     "@nestjs/testing": "11.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "8.11.13",
+    "@types/pg": "8.11.14",
     "@types/supertest": "6.0.3",
     "better-sqlite3": "11.9.1",
     "jest-mock-extended": "3.0.7",
