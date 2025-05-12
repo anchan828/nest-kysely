@@ -26,7 +26,7 @@ services:
       interval: 2s
       retries: 10
   postgres:
-    image: postgres:17.4
+    image: postgres:17.5
     shm_size: 128mb
     tmpfs: /var/lib/postgresql/data
     ports:
