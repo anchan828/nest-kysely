@@ -59,7 +59,7 @@
     "@anchan828/kysely-migration": "^0.8.15"
   },
   "volta": {
-    "node": "22.15.0"
+    "node": "22.15.1"
   },
   "publishConfig": {
     "access": "public"
