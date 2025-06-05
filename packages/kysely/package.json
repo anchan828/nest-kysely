@@ -44,7 +44,7 @@
     "@nestjs/core": "11.1.2",
     "@nestjs/testing": "11.1.2",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "8.15.3",
+    "@types/pg": "8.15.4",
     "better-sqlite3": "11.10.0",
     "kysely": "0.27.6",
     "mysql2": "3.14.1",
