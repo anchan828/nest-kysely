@@ -22,6 +22,7 @@ describe("UserRoleRepository", () => {
           {
             parameters: ["userId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select * from `userRole` where `userId` = ?",
           },
         ],
@@ -37,6 +38,7 @@ describe("UserRoleRepository", () => {
           {
             parameters: ["userId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select * from `userRole` where `userId` = ?",
           },
         ],
@@ -54,6 +56,7 @@ describe("UserRoleRepository", () => {
           {
             parameters: ["userId", "admin"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "insert into `userRole` (`userId`, `role`) values (?, ?)",
           },
         ],
