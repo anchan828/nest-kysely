@@ -36,7 +36,7 @@
     "@nestjs/core": "11.1.2",
     "@nestjs/platform-express": "11.1.2",
     "express": "5.1.0",
-    "kysely": "0.27.6"
+    "kysely": "0.28.2"
   },
   "devDependencies": {
     "@nestjs/cli": "11.0.7",
@@ -47,13 +47,13 @@
     "@types/supertest": "6.0.3",
     "better-sqlite3": "11.10.0",
     "jest-mock-extended": "3.0.7",
-    "kysely": "0.27.6",
+    "kysely": "0.28.2",
     "mysql2": "3.14.1",
     "pg": "8.16.0",
     "supertest": "7.1.1"
   },
   "peerDependencies": {
-    "kysely": "^0.27.4"
+    "kysely": "^0.27.4 || ^0.28.0"
   },
   "volta": {
     "node": "22.16.0"

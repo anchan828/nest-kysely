@@ -43,14 +43,14 @@
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "8.15.4",
     "better-sqlite3": "11.10.0",
-    "kysely": "0.27.6",
+    "kysely": "0.28.2",
     "mysql2": "3.14.1",
     "pg": "8.16.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
   },
   "peerDependencies": {
-    "kysely": "^0.27.4"
+    "kysely": "^0.27.4 || ^0.28.0"
   },
   "volta": {
     "node": "22.16.0"
