@@ -25,6 +25,7 @@ describe("UserRepository", () => {
           {
             parameters: ["userId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select * from `user` where `id` = ?",
           },
         ],
@@ -40,6 +41,7 @@ describe("UserRepository", () => {
           {
             parameters: ["userId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select * from `user` where `id` = ?",
           },
         ],
@@ -57,6 +59,7 @@ describe("UserRepository", () => {
           {
             parameters: ["test", expect.anything()],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "insert into `user` (`name`, `id`) values (?, ?)",
           },
         ],

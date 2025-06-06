@@ -28,6 +28,7 @@ describe("CommentRepository", () => {
           {
             parameters: [expect.any(String), "comment", "userId", expect.any(Date)],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "insert into `comment` (`id`, `comment`, `createdById`, `createdAt`) values (?, ?, ?, ?)",
           },
         ],
@@ -64,6 +65,7 @@ describe("CommentRepository", () => {
           {
             parameters: ["commentId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select `comment`.`comment`, `comment`.`createdAt`, `comment`.`id`, `comment`.`createdById`, `user`.`name` as `createdByName` from `comment` inner join `user` on `user`.`id` = `comment`.`createdById` where `comment`.`id` = ?",
           },
         ],
@@ -111,6 +113,7 @@ describe("CommentRepository", () => {
           {
             parameters: [],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "select `comment`.`comment`, `comment`.`createdAt`, `comment`.`id`, `comment`.`createdById`, `user`.`name` as `createdByName` from `comment` inner join `user` on `user`.`id` = `comment`.`createdById`",
           },
         ],
@@ -132,6 +135,7 @@ describe("CommentRepository", () => {
           {
             parameters: ["commentId"],
             query: expect.anything(),
+            queryId: expect.anything(),
             sql: "delete from `comment` where `id` = ?",
           },
         ],
