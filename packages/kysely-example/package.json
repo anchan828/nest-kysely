@@ -49,7 +49,7 @@
     "jest-mock-extended": "3.0.7",
     "kysely": "0.28.2",
     "mysql2": "3.14.1",
-    "pg": "8.16.1",
+    "pg": "8.16.2",
     "supertest": "7.1.1"
   },
   "peerDependencies": {
