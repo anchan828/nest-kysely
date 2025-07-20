@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/kysely-migration",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Migration helper package for Kysely",
   "homepage": "https://github.com/anchan828/nest-kysely#readme",
   "bugs": {
