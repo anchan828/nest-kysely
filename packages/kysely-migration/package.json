@@ -58,5 +58,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "packageManager": "npm@11.5.1"
+  "packageManager": "npm@11.5.2"
 }
