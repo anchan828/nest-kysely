@@ -1,7 +1,7 @@
 {
   "name": "@anchan828/nest-kysely-example",
   "private": true,
-  "version": "0.9.12",
+  "version": "0.9.13",
   "description": "jest mock for kysely",
   "homepage": "https://github.com/anchan828/nest-kysely#readme",
   "bugs": {
@@ -30,8 +30,8 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@anchan828/kysely-migration": "^0.9.12",
-    "@anchan828/nest-kysely": "^0.9.12",
+    "@anchan828/kysely-migration": "^0.9.13",
+    "@anchan828/nest-kysely": "^0.9.13",
     "@nestjs/common": "11.1.6",
     "@nestjs/core": "11.1.6",
     "@nestjs/platform-express": "11.1.6",
