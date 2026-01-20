@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "8.16.0",
-    "better-sqlite3": "11.10.0",
+    "better-sqlite3": "12.6.2",
     "kysely": "0.28.9",
     "mysql2": "3.16.0",
     "pg": "8.17.1",
