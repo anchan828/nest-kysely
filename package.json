@@ -52,5 +52,5 @@
   "volta": {
     "node": "22.22.1"
   },
-  "packageManager": "npm@11.7.0"
+  "packageManager": "npm@11.12.0"
 }
