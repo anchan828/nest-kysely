@@ -33,7 +33,7 @@
     "@anchan828/kysely-migration": "^0.9.31",
     "@anchan828/nest-kysely": "^0.9.31",
     "@nestjs/common": "11.1.17",
-    "@nestjs/core": "11.1.17",
+    "@nestjs/core": "11.1.18",
     "@nestjs/platform-express": "11.1.17",
     "express": "5.2.1",
     "kysely": "0.28.14"
