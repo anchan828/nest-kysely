@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@nestjs/common": "11.1.17",
-    "@nestjs/core": "11.1.17",
+    "@nestjs/core": "11.1.18",
     "@nestjs/testing": "11.1.17",
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "8.18.0",
