@@ -47,7 +47,7 @@
     "@types/pg": "8.20.0",
     "better-sqlite3": "11.10.0",
     "kysely": "0.28.16",
-    "mysql2": "3.20.0",
+    "mysql2": "3.22.1",
     "pg": "8.20.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
